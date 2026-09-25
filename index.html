@@ -1,0 +1,2463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Laboratory Management System</title>
+<style>
+:root{--blue:#0879c9;--dark:#064c83;--cyan:#08a8c8;--light:#e9f5ff;--line:#8dbbd8;--page-bg:#cfe8f7;--panel-bg:#eaf7ff;--heading-bg:#0875b4;--heading-text:#fff;--accent:#0879c9}
+*{box-sizing:border-box}html,body{min-width:320px}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--page-bg);background-size:cover;background-position:center;background-attachment:fixed;color:#123}
+button,input,select,textarea{font:inherit}button{cursor:pointer;border:1px solid #075b94;border-radius:3px;background:linear-gradient(#fff,#c5e7fb);color:#073e69;padding:7px 13px;font-weight:bold}button:hover{background:#b2e1fa}button.primary{background:linear-gradient(#20b9ed,#0572b8);color:white}button.danger{background:#f5c1c1;color:#8c1010;border-color:#a33}button.dark{background:#52748d;color:#fff}
+input,select,textarea{border:1px solid #7da8c3;border-radius:3px;padding:7px;background:#fff;width:100%}
+label{display:block;font-weight:bold;color:#174e75;font-size:13px;margin:7px 0}
+header{height:82px;background:linear-gradient(135deg,var(--cyan),var(--blue));color:#fff;border-bottom:5px solid #064f85;padding:10px 22px;display:flex;align-items:center;justify-content:space-between}
+header h1{margin:0;font-size:31px;letter-spacing:2px;font-family:Georgia,serif;font-weight:800;color:#e9ffff;text-shadow:0 2px 0 #07527e,0 0 12px #baf6ff}header h1:before{content:none;display:none}header small{font-size:13px}header small{font-size:13px}
+.layout{display:grid;grid-template-columns:245px minmax(0,1fr) 285px;min-height:calc(100vh - 120px);gap:0;max-width:1900px;margin:0 auto;width:100%}
+.sidebar{background:linear-gradient(145deg,#087b9e,#b6e6f1);padding:15px 12px;border-right:3px solid #08618e}
+.logoBox{height:92px;background:#fff;border:2px solid #0875b4;border-radius:6px;display:flex;align-items:center;justify-content:center;margin-bottom:12px;color:#0871a9;font-size:25px;font-weight:bold;text-align:center}
+.menu button{display:flex;align-items:center;gap:9px;width:100%;margin:6px 0;text-align:left;padding:11px 10px;background:linear-gradient(#fff,#c9e9fa);font-size:14px;min-height:45px;transition:.15s transform,.15s box-shadow}.menu button:hover{transform:translateX(2px);box-shadow:0 3px 8px #064c8340}.menuIcon{width:29px;height:29px;display:inline-flex;align-items:center;justify-content:center;flex:0 0 29px;border-radius:8px;background:linear-gradient(135deg,var(--cyan),var(--blue));color:#fff;font-size:11px;font-weight:800;letter-spacing:-.5px;box-shadow:inset 0 1px #ffffff88}
+.menu button.active{background:linear-gradient(135deg,#29bce9,#0874b4);color:#fff;box-shadow:0 3px 8px #064c8355}.menu button.active .menuIcon{background:#fff;color:#0874b4}
+.main{padding:14px;background:var(--panel-bg);position:relative;overflow:hidden}.main:before{content:"🔬   🧪   ⚗️   🧫";position:absolute;right:20px;bottom:20px;font-size:70px;letter-spacing:22px;opacity:.055;filter:grayscale(1);pointer-events:none}.main>*{position:relative;z-index:1}.right{background:var(--panel-bg);border-left:3px solid #0870a9;padding:12px}
+.page{display:none}.page.active{display:block}.panel{background:#fff;border:1px solid #6ea5c4;box-shadow:0 1px 3px #0003;margin-bottom:13px}.dashboardHero{border:0;background:linear-gradient(120deg,#dffaff,#bde8f7);box-shadow:0 3px 10px #0570ae33}.dashboardHero h2{font-size:26px;letter-spacing:1px}.panel h2{margin:0;padding:9px 12px;background:linear-gradient(135deg,var(--cyan),var(--heading-bg));color:var(--heading-text);font-size:18px}.body{padding:13px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:9px}.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.actions{padding-top:10px;display:flex;flex-wrap:wrap;gap:6px}.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}.stat{background:linear-gradient(135deg,#fff,#bceafa);border:1px solid #75adcb;padding:15px;border-radius:5px}.stat b{display:block;font-size:26px;color:#075e96}.stat span{font-size:13px;color:#345}
+table{width:100%;border-collapse:collapse;font-size:13px;margin-top:10px}th{background:#0878b7;color:#fff;padding:8px;border:1px solid #6a9fbc}td{padding:7px;border:1px solid #a9c8d9;background:#fff}tr:nth-child(even) td{background:#eef9ff}.scroll{overflow:auto;max-height:360px}
+.notice{padding:10px;background:#fff5c7;border:1px solid #dfc66b;margin-bottom:10px;color:#624c00}.error{color:#b00;font-weight:bold}.success{color:#087329;font-weight:bold}.hidden{display:none!important}
+.right h3{margin:0;background:#0875b4;color:#fff;padding:9px;font-size:16px}.pending{background:#fff;border:1px solid #72a9c6;padding:8px;margin-bottom:8px;font-size:13px}.pending b{color:#a00}.footer{background:#07538d;color:#fff;text-align:center;padding:8px;font-size:12px}
+.modal{position:fixed;inset:0;background:#0008;display:flex;align-items:center;justify-content:center;z-index:5}.modal>div{background:#fff;width:min(900px,94vw);max-height:90vh;overflow:auto;border:4px solid #0875b4;padding:15px}
+.reportPaper{background:#fff;padding:18mm;max-width:850px;margin:auto;border:1px solid #aaa;color:#111;font-size:var(--print-body,11pt)}.reportPaper h1{text-align:center;color:#075d91;margin:0;font-size:var(--print-title,22pt)}.reportPaper h2{text-align:center;border-bottom:2px solid #075d91;padding-bottom:8px;font-size:var(--print-heading,15pt)}.reportPaper table{font-size:var(--print-table,9pt)}.reportPaper p{font-size:var(--print-body,11pt);margin:6px 0}
+@media(max-width:1000px){.layout{grid-template-columns:190px 1fr}.right{display:none}.grid4{grid-template-columns:repeat(2,1fr)}} 
+@media(max-width:650px){.layout{display:block}.sidebar{border:0}.grid4{grid-template-columns:1fr}.main{padding:8px}.right{display:none}header{padding:8px 12px}header h1{font-size:22px}}
+@page{size:A4;margin:6mm}
+@media print{
+  html,body{background:#fff!important;margin:0!important;padding:0!important;width:100%!important;overflow:visible!important}
+  body>*:not(#reportModal){display:none!important}
+  #reportModal{display:block!important;position:static!important;inset:auto!important;background:#fff!important;width:100%!important;height:auto!important;overflow:visible!important}
+  #reportModal>div{width:100%!important;max-width:none!important;max-height:none!important;overflow:visible!important;border:0!important;padding:0!important;margin:0!important}
+  .noPrint{display:none!important}
+  .reportPaper{
+    display:block!important;
+    border:0!important;
+    width:100%!important;
+    max-width:none!important;
+    min-height:0!important;
+    height:auto!important;
+    margin:0!important;
+    padding:var(--page-top,5mm) var(--page-right,7mm) var(--page-bottom,5mm) var(--page-left,7mm)!important;
+    font-size:var(--print-body,9pt)!important;
+    line-height:1.12!important;
+    page-break-inside:avoid!important;
+    break-inside:avoid!important;
+  }
+  .reportPaper h1{font-size:var(--print-title,16pt)!important;margin:0 0 2mm!important;line-height:1.05!important}
+  .reportPaper h2{font-size:var(--print-heading,11pt)!important;padding-bottom:2mm!important;margin:2mm 0!important}
+  .reportPaper p{font-size:var(--print-body,8.5pt)!important;margin:2mm 0!important;line-height:1.1!important}
+  .reportPaper table{font-size:var(--print-table,8pt)!important;margin-top:2mm!important;line-height:1.05!important}
+  .reportPaper th,.reportPaper td{padding:2px 4px!important}
+  .reportPaper input{border:0!important;padding:0!important;font-size:8pt!important;background:transparent!important}
+}
+.settingsTabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;border-bottom:2px solid #0875b4;padding-bottom:7px}.settingsTab{background:linear-gradient(#fff,#d8effb)}.settingsTab.active{background:linear-gradient(#25b8e3,#0875b4);color:#fff}.settingTabPane{padding:4px 0}.toggleLine{display:flex;align-items:center;gap:8px;font-size:14px}.toggleLine input{accent-color:#0875b4}.reportPaper.preprinted{padding-top:var(--preprinted-top,38mm)!important}.reportPatientBox{border:1px solid #777;padding:5px;margin:5px 0;font-size:inherit}.testSection{margin-top:8px}.testSection h3{margin:5px 0;padding:4px;background:#e8f4fa;border-left:4px solid #0875b4;font-size:1.05em}@media print{.reportPaper.preprinted{padding-top:var(--preprinted-top,38mm)!important}}
+.appearanceGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}.colorInput{height:40px;padding:3px}.themeCard{border:1px solid #9cc5d9;border-radius:7px;padding:10px;background:#f7fcff}.themeCard b{display:block;margin-bottom:5px}.fileNote{font-size:12px;color:#456}.dashboardMark{display:inline-flex;width:34px;height:34px;vertical-align:middle;align-items:center;justify-content:center;border-radius:9px;background:linear-gradient(135deg,var(--cyan),var(--blue));color:#fff;font-size:13px;font-weight:900;letter-spacing:-1px}.menuLabel{line-height:1.15}@media(max-width:1200px){.layout{grid-template-columns:220px minmax(0,1fr)}}
+
+/* V8.3 multi-test selection and parameter controls */
+.microscopeMark{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;margin-right:8px;border:2px solid #d9fbff;border-radius:8px;background:rgba(255,255,255,.12);vertical-align:middle}
+.microscopeMark svg{width:27px;height:27px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.brandLine{display:flex;align-items:center;gap:2px}.brandInfo{font-size:12px;margin-top:3px;color:#eaffff;opacity:.98}.dashboardInfo{display:flex;flex-wrap:wrap;gap:8px;padding:7px 12px 10px;color:#17658b;font-weight:bold;font-size:13px}.infoChip{background:rgba(255,255,255,.75);border:1px solid #a5d3e3;border-radius:14px;padding:4px 9px}.relationGrid{display:grid;grid-template-columns:150px 1fr;gap:7px}.testCheckList{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:6px;padding:8px;border:1px solid #7da8c3;border-radius:3px;background:#f7fcff;max-height:260px;overflow:auto}.testCheckItem,.paramCheckItem{display:flex;align-items:center;gap:7px;padding:7px 9px;border:1px solid #b5d4e5;border-radius:4px;background:#fff;font-size:13px}.testCheckItem input,.paramCheckItem input{width:auto!important;flex:0 0 auto}.paramChooser{margin:8px 0;padding:9px;border:1px solid #8dbbd8;background:#f7fcff}.paramChooser h4{margin:0 0 7px;color:#075d91}.paramCheckGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:5px}.param-row-hidden{display:none!important}@media(max-width:650px){.relationGrid{grid-template-columns:1fr}}
+
+.labContactBio{display:block;line-height:1.45;font-size:12px;font-weight:700;color:inherit;}
+.dashboardBio{padding:0 24px 14px;color:#075d91;font-size:15px;font-weight:700;position:relative;z-index:2;}
+@media(max-width:650px){.dashboardBio{padding:0 14px 12px;font-size:12px;}}
+@media print{.testHeading{border:1px solid #777!important;background:#f1f1f1!important;color:#111!important;padding:4px 6px!important;margin:5px 0 0!important}.reportPaper h2{border-bottom:1px solid #777!important}.reportPaper table,.reportPaper th,.reportPaper td{border-color:#777!important}.reportPatientBox{border-color:#777!important}.reportPaper th{background:#f1f1f1!important;color:#111!important}.reportPaper .testSection h3{border-left-color:#777!important;background:#f1f1f1!important;color:#111!important}}
+ .patientGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px 18px;align-items:center}.patientAddress{margin-top:7px;padding-top:6px;border-top:1px solid #777}@media(max-width:650px){.patientGrid{grid-template-columns:1fr 1fr}}@media print{.patientGrid{gap:6px 14px}.patientAddress{border-top-color:#777}}.testHeading{display:block;border:1px solid #777;background:#e8f4fa;font-weight:700;text-align:left;padding:5px 7px;margin:8px 0 0;font-size:1.02em}.reportTestTable{width:100%;margin:0 0 12px;border-collapse:collapse}.reportTestTable:last-of-type{margin-bottom:8px}.paramChooser{display:none!important}
+@media print{.reportPaper select,.reportPaper input{border:0!important;background:transparent!important;box-shadow:none!important;appearance:none!important;-webkit-appearance:none!important;padding:0!important;color:#111!important}.reportPaper select option{color:#111!important}}
+</style>
+<style id="horizontalReferralEntryFix">
+/* Place transfer/referral details in the full-width area below patient details, not in a narrow side column. */
+#receipt .grid4 > #referralBox, #referralBox { grid-column: 1 / -1 !important; width: 100% !important; box-sizing: border-box !important; }
+#referralBox .referralColumns { display: grid !important; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important; gap: 14px !important; }
+#referralBox .referralCard { min-width: 0 !important; }
+@media (max-width: 700px) { #referralBox .referralColumns { grid-template-columns: 1fr !important; } }
+</style>
+
+
+<style id="specimenReferralStyles">.referralBox{margin-top:10px;padding:10px;border:1px solid #7da8c3;border-radius:4px;background:#f7fcff}.referralBox h3{margin:0 0 8px;color:#075d91;font-size:15px}.referralColumns{display:grid;grid-template-columns:1fr 1fr;gap:10px}.referralCard{border:1px solid #9bbdce;background:#fff;padding:8px}.referralCard h4{margin:0 0 6px;color:#075d91;font-size:14px;border-bottom:1px solid #c6dce8;padding-bottom:4px}.referralCard p{margin:3px 0;font-size:12px;line-height:1.35}.referralCard .autoNote{color:#456;font-size:11px}@media(max-width:650px){.referralColumns{grid-template-columns:1fr}}</style>
+
+<style id="finalPrintControlStyles">
+@media print{
+ .reportPaper.printNoH td,.reportPaper.printNoH th{border-top-color:transparent!important;border-bottom-color:transparent!important}
+ .reportPaper.printNoV td,.reportPaper.printNoV th{border-left-color:transparent!important;border-right-color:transparent!important}
+ .reportPaper.noTestBg .testHeading{background:transparent!important}
+ .reportPaper.resultLeft .reportTestTable td:nth-child(2){text-align:left!important}
+ .reportPaper.resultCenter .reportTestTable td:nth-child(2){text-align:center!important}
+ .reportPaper.resultRight .reportTestTable td:nth-child(2){text-align:right!important}
+ .reportPaper.resultJustify .reportTestTable td:nth-child(2){text-align:justify!important}
+}
+</style>
+
+<style id="finalAndroidDottedRowsFix">
+/* Final print fix: dotted separator BELOW every parameter row. */
+@media print {
+  .reportPaper .reportTestTable {
+    width: 100% !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .reportPaper .reportTestTable > tr:first-child > th,
+  .reportPaper .reportTestTable > tbody > tr:first-child > th {
+    border-top: 1px solid #777 !important;
+    border-bottom: 1px solid #777 !important;
+  }
+  .reportPaper .reportTestTable > tr:not(:first-child) > td,
+  .reportPaper .reportTestTable > tbody > tr:not(:first-child) > td {
+    border-top: 0 !important;
+    border-bottom: 1px dotted #777 !important;
+    border-left: 1px solid #c4c4c4 !important;
+    border-right: 1px solid #c4c4c4 !important;
+    background: transparent !important;
+  }
+  .reportPaper .reportTestTable > tr:last-child > td,
+  .reportPaper .reportTestTable > tbody > tr:last-child > td {
+    border-bottom: 1px dotted #777 !important;
+  }
+  /* Keep the test-name background color in PDF. */
+  .reportPaper .testHeading {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    background: #e8f4fa !important;
+  }
+  .reportPaper.v86-no-horizontal .reportTestTable > tr:not(:first-child) > td,
+  .reportPaper.v86-no-horizontal .reportTestTable > tbody > tr:not(:first-child) > td {
+    border-bottom-color: transparent !important;
+  }
+  .reportPaper.v86-no-vertical .reportTestTable > tr:not(:first-child) > td,
+  .reportPaper.v86-no-vertical .reportTestTable > tbody > tr:not(:first-child) > td {
+    border-left-color: transparent !important;
+    border-right-color: transparent !important;
+  }
+}
+</style>
+
+<style id="finalRequestedDottedOnlyFix">
+/* User-requested final report appearance: dotted horizontal separators only. */
+@media print {
+  .reportPaper table.parameterResultsTable {
+    width:100% !important;
+    border-collapse:separate !important;
+    border-spacing:0 !important;
+    table-layout:auto !important;
+    -webkit-print-color-adjust:exact !important;
+    print-color-adjust:exact !important;
+  }
+  .reportPaper table.parameterResultsTable th,
+  .reportPaper table.parameterResultsTable td {
+    border-left:0 !important;
+    border-right:0 !important;
+    box-shadow:none !important;
+  }
+  .reportPaper table.parameterResultsTable th {
+    border-top:1px solid #777 !important;
+    border-bottom:1px solid #777 !important;
+  }
+  .reportPaper table.parameterResultsTable tbody tr td,
+  .reportPaper table.parameterResultsTable > tr:not(:first-child) td {
+    border-top:0 !important;
+    border-bottom:1px dotted #777 !important;
+    background:transparent !important;
+  }
+}
+</style>
+<script id="finalRequestedDottedOnlyLogic">
+(function(){
+  'use strict';
+  function markParameterTable(){
+    var paper=document.querySelector('#reportContent .reportPaper');
+    if(!paper)return;
+    var tables=paper.querySelectorAll('table');
+    tables.forEach(function(t){
+      var headers=Array.from(t.querySelectorAll('th')).map(function(x){return (x.textContent||'').trim().toLowerCase();});
+      if(headers.indexOf('test / parameter')!==-1 && headers.indexOf('result')!==-1){
+        t.classList.add('parameterResultsTable');
+        t.querySelectorAll('th,td').forEach(function(cell){
+          cell.style.borderLeft='0';
+          cell.style.borderRight='0';
+        });
+        t.querySelectorAll('tr').forEach(function(row,i){
+          if(i===0){
+            row.querySelectorAll('th').forEach(function(cell){
+              cell.style.borderTop='1px solid #777';
+              cell.style.borderBottom='1px solid #777';
+            });
+          }else{
+            row.querySelectorAll('td').forEach(function(cell){
+              cell.style.borderTop='0';
+              cell.style.borderBottom='1px dotted #777';
+            });
+          }
+        });
+      }
+    });
+  }
+  var oldOpen=window.openReport;
+  window.openReport=function(){var r=oldOpen&&oldOpen.apply(this,arguments);setTimeout(markParameterTable,80);setTimeout(markParameterTable,300);return r;};
+  document.addEventListener('DOMContentLoaded',function(){setTimeout(markParameterTable,150);});
+  setTimeout(markParameterTable,400);
+})();
+</script>
+
+<style id="MumtazV814FinalPrintControls">
+@media print{
+  .reportPaper{
+    padding-top:var(--page-top,10mm)!important;
+    padding-right:var(--page-right,7mm)!important;
+    padding-bottom:var(--page-bottom,5mm)!important;
+    padding-left:var(--page-left,7mm)!important;
+  }
+  .reportPaper.v814-no-horizontal .reportTestTable th,
+  .reportPaper.v814-no-horizontal .reportTestTable td{
+    border-top-color:transparent!important;
+    border-bottom-color:transparent!important;
+  }
+  .reportPaper.v814-no-horizontal .reportTestTable tr:first-child th{
+    border-bottom-color:#777!important;
+  }
+  .reportPaper.v814-no-vertical .reportTestTable th,
+  .reportPaper.v814-no-vertical .reportTestTable td{
+    border-left-color:transparent!important;
+    border-right-color:transparent!important;
+  }
+}
+</style>
+<script id="MumtazV814FinalPrintControlsScript">
+(function(){
+'use strict';
+function ensurePrintConfig(){
+  window.db=window.db||{};
+  db.settings=db.settings||{};
+  db.settings.printConfig=db.settings.printConfig||{};
+  var c=db.settings.printConfig;
+  if(c.horizontalLines===undefined)c.horizontalLines=true;
+  if(c.verticalLines===undefined)c.verticalLines=true;
+  if(c.pageTop===undefined)c.pageTop=10;
+  if(c.pageBottom===undefined)c.pageBottom=5;
+  if(c.pageLeft===undefined)c.pageLeft=7;
+  if(c.pageRight===undefined)c.pageRight=7;
+  return c;
+}
+function applyFinalPrintControls(){
+  var paper=document.querySelector('#reportContent .reportPaper');
+  if(!paper)return;
+  var c=ensurePrintConfig();
+  paper.classList.toggle('v814-no-horizontal',c.horizontalLines===false);
+  paper.classList.toggle('v814-no-vertical',c.verticalLines===false);
+  paper.style.setProperty('--page-top',Number(c.pageTop)+'mm');
+  paper.style.setProperty('--page-bottom',Number(c.pageBottom)+'mm');
+  paper.style.setProperty('--page-left',Number(c.pageLeft)+'mm');
+  paper.style.setProperty('--page-right',Number(c.pageRight)+'mm');
+}
+var previousOpen=window.openReport;
+if(previousOpen&&!window.__v814PrintOpenWrapped){
+  window.__v814PrintOpenWrapped=true;
+  window.openReport=function(){
+    var result=previousOpen.apply(this,arguments);
+    setTimeout(applyFinalPrintControls,50);
+    setTimeout(applyFinalPrintControls,250);
+    return result;
+  };
+}
+var previousSave=window.saveSettings;
+if(previousSave&&!window.__v814PrintSaveWrapped){
+  window.__v814PrintSaveWrapped=true;
+  window.saveSettings=function(){
+    var result=previousSave.apply(this,arguments);
+    setTimeout(applyFinalPrintControls,50);
+    return result;
+  };
+}
+window.addEventListener('beforeprint',applyFinalPrintControls);
+document.addEventListener('DOMContentLoaded',function(){
+  ensurePrintConfig();
+  setTimeout(applyFinalPrintControls,200);
+  setTimeout(applyFinalPrintControls,600);
+});
+})();
+</script>
+</head>
+<body>
+<header>
+<div><div class="brandLine"><span class="microscopeMark" aria-label="Microscope"><svg viewBox="0 0 64 64" role="img" aria-hidden="true"><path d="M20 7h15v7h-5v17c0 7 5 12 12 12h8"/><path d="M16 7h12M12 43h39M7 54h50"/><path d="M29 31h14"/><path d="M42 14l8 8-6 6-8-8z"/><path d="M43 43c0 6-5 11-11 11"/><path d="M17 54c0-8 6-14 14-14"/></svg></span><h1 id="labTitle">MUMTAZ LAB</h1></div><small id="labSub" class="labContactBio">Address: Miani Adda Chakwal<br>Contact: 03326709541</small><div id="brandInfo" class="brandInfo"></div></div>
+<div id="headerContact" class="headerContact" style="display:none!important"><div id="headerAddress"></div><div id="headerPhone"></div></div>
+<div id="loginStatus">Not logged in <button id="topLogout" class="danger hidden" onclick="logout()">Logout</button></div>
+</header>
+
+<div id="loginScreen" class="modal">
+<div style="max-width:390px">
+<h2 style="color:#075d91;margin-top:0">🔐 Secure Login</h2>
+<label>Username<input id="loginUser" autocomplete="username"></label>
+<label>Password<input id="loginPass" type="password" autocomplete="current-password"></label>
+<button type="button" class="primary" onclick="login()">Login</button>
+<div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+<button type="button" onclick="showAuth('signup')">➕ Sign Up / Create Account</button>
+<button type="button" onclick="showAuth('reset')">🔑 Reset Password</button>
+</div>
+<p id="loginError" class="error"></p>
+</div>
+</div>
+
+<div id="authModal" class="modal hidden"><div style="max-width:430px">
+<h2 id="authTitle" style="color:#075d91;margin-top:0">Sign Up</h2>
+<p id="authHelp" class="small"></p>
+<label id="authNameLabel">Full Name<input id="authName" autocomplete="name" placeholder="Enter full name"></label>
+<label>Username<input id="authUser" autocomplete="username" placeholder="e.g. ahmed123"></label>
+<label>New Password<input id="authPass" type="password" autocomplete="new-password" placeholder="Minimum 4 characters"></label>
+<label id="authConfirmLabel">Confirm Password<input id="authConfirm" type="password" autocomplete="new-password"></label>
+<label id="authRoleLabel">Role<select id="authRole"><option>Reception</option><option>Lab Technician</option><option>Doctor</option></select></label>
+<div class="actions"><button type="button" class="primary" onclick="submitAuth()">Create Account</button><button type="button" onclick="closeAuth()">Cancel</button></div>
+<p id="authMsg"></p>
+</div></div>
+
+<div class="layout">
+<aside class="sidebar">
+<div class="logoBox" id="sideLabName">MUMTAZ<br>LAB</div>
+<div class="menu">
+<button data-page="dashboard" onclick="go('dashboard')"><span class="menuIcon">DB</span><span class="menuLabel">Main Menu / Dashboard</span></button>
+<button data-page="receipt" onclick="go('receipt')"><span class="menuIcon">SR</span><span class="menuLabel">Sample Receipt</span></button>
+<button data-page="reports" onclick="go('reports')"><span class="menuIcon">RP</span><span class="menuLabel">Report Entry / Print</span></button>
+<button data-page="search" onclick="go('search')"><span class="menuIcon">SD</span><span class="menuLabel">Search / Dues</span></button>
+<button data-page="accounts" onclick="go('accounts')"><span class="menuIcon">AC</span><span class="menuLabel">Accounts / Statements</span></button>
+<button data-page="incentive" onclick="go('incentive')"><span class="menuIcon">DS</span><span class="menuLabel">Doctor Share / Incentive</span></button>
+<button data-page="tests" onclick="go('tests')"><span class="menuIcon">TM</span><span class="menuLabel">Tests Management</span></button>
+<button data-page="expenses" onclick="go('expenses')"><span class="menuIcon">EX</span><span class="menuLabel">Expenses</span></button>
+<button data-page="records" onclick="go('records')"><span class="menuIcon">RD</span><span class="menuLabel">Records / Delete</span></button>
+<button data-page="inventory" onclick="go('inventory')"><span class="menuIcon">KI</span><span class="menuLabel">Kits / Inventory</span></button>
+<button data-page="settings" onclick="go('settings')"><span class="menuIcon">LS</span><span class="menuLabel">Lab Settings / Users</span></button>
+</div>
+</aside>
+
+<main class="main">
+<section id="dashboard" class="page active">
+<div class="panel dashboardHero"><h2><span class="microscopeMark" style="width:62px;height:62px;border:0;background:transparent;"><svg viewBox="0 0 64 64" role="img" aria-label="Microscope"><path d="M20 7h15v7h-5v17c0 7 5 12 12 12h8"/><path d="M16 7h12M12 43h39M7 54h50"/><path d="M29 31h14"/><path d="M42 14l8 8-6 6-8-8z"/><path d="M43 43c0 6-5 11-11 11"/><path d="M17 54c0-8 6-14 14-14"/></svg></span><span id="dashboardLabName">Mumtaz Lab</span> <span style="font-size:30px">🌙</span></h2>
+<div id="dashboardBio" class="dashboardBio"></div><div class="body heroDetails" style="display:none!important"></div><div id="dashboardInfo" class="dashboardInfo" style="display:none!important"></div></div>
+<div class="panel"><h2>Main Menu / Dashboard</h2><div class="body">
+<div class="stats">
+<div class="stat"><b id="stPatients">0</b><span>Today's Patients</span></div>
+<div class="stat"><b id="stTests">0</b><span>Today's Tests</span></div>
+<div class="stat"><b id="stCollection">Rs. 0</b><span>Today's Collection</span></div>
+<div class="stat"><b id="stPending">0</b><span>Pending Reports</span></div>
+<div class="stat"><b id="stDue">Rs. 0</b><span>Pending Dues</span></div>
+<div class="stat"><b id="stMonth">Rs. 0</b><span>This Month Collection</span></div>
+</div>
+</div></div>
+<div class="panel"><h2>Quick Actions</h2><div class="body actions">
+<button class="primary" onclick="go('receipt')">➕ New Sample Receipt</button>
+<button onclick="go('reports')">🧪 Enter Pending Reports</button>
+<button onclick="go('search')">🔎 Search Patient</button>
+<button onclick="go('accounts')">💰 Accounts</button>
+</div></div>
+</section>
+
+<section id="receipt" class="page">
+<div class="panel"><h2>🧑‍⚕️ Sample Receipt / Patient Registration</h2><div class="body">
+<div class="grid4">
+<label>MR / Lab No.<input id="rSample" placeholder="Enter MR / Lab No."></label>
+<label>Date & Time<input id="rDate" readonly></label>
+<label>Patient Name<input id="rName" placeholder="Enter patient name"></label>
+<label>Relation<select id="rRelation"><option>S/O</option><option>D/O</option><option>W/O</option><option>H/O</option><option>Self</option><option>Guardian</option></select></label>
+<label>Relation Name<input id="rRelationName" placeholder="Enter father / husband / guardian name"></label>
+<label>Age<input id="rAge" type="number"></label>
+<label>Gender<select id="rGender"><option>Male</option><option>Female</option><option>Other</option></select></label>
+<label>Phone<input id="rPhone"></label>
+<label>Address<input id="rAddress" placeholder="Patient address"></label>
+<input id="rBarcode" type="hidden" value=""><label>Doctor / Ref. By<div style="display:flex;gap:5px"><select id="rDoctor" style="flex:1"><option value="">Select Doctor / Self</option></select><button type="button" onclick="addDoctor()">＋ Add</button></div></label>
+<label>Specimen<select id="rSpecimen"><option value="Taken in Lab">Taken in Lab</option><option value="Brought in Lab">Brought in Lab</option></select></label><div id="referralBox" class="referralBox hidden"><h3>📦 Sample Transfer / Referral Details</h3><div class="referralColumns"><div class="referralCard"><h4>From (Manual)</h4><label>Lab / Hospital Name<input id="refFromLab" placeholder="Enter source lab / hospital"></label><label>Address<input id="refFromAddress" placeholder="Enter source address"></label><label>Contact<input id="refFromPhone" placeholder="Enter source contact"></label><label>Despatch By<input id="refFromDespatch" placeholder="Enter despatch person name"></label><div class="autoNote">From, Address, Contact aur Despatch By manually enter karein; details save rahengi.</div></div><div class="referralCard"><h4>To (Destination Lab / Hospital)</h4><label>Lab / Hospital Name<input id="refToLab" placeholder="Enter destination lab / hospital"></label><label>Address<input id="refToAddress" placeholder="Enter destination address"></label><label>Contact<input id="refToPhone" placeholder="Enter destination contact"></label></div></div><div class="actions"><button type="button" onclick="saveReferralDetails()">Save Transfer Details</button></div><p id="referralMsg"></p></div>
+</div>
+<label>Search Test<input id="rTestSearch" placeholder="Type test name to search..." oninput="populateTests(this.value)"></label>
+<label>Tests (mark one or more)</label><div id="rTestChecks" class="testCheckList"></div><select id="rTests" multiple size="10" style="display:none!important"></select>
+<div class="grid4">
+<label>Paid Amount<input id="rPaid" type="number" value="0"></label>
+<label>Discount<input id="rDiscount" type="number" value="0"></label>
+<label>Total Amount<input id="rTotal" readonly></label>
+<label>Due Amount<input id="rDue" readonly></label>
+</div>
+<div class="actions"><button class="primary" onclick="saveReceipt()">Save Receipt</button><button onclick="newReceipt()">New</button><button onclick="printLastReceipt()">Print Receipt</button></div>
+<p id="receiptMsg"></p>
+</div></div>
+</section>
+
+<section id="reports" class="page">
+<div class="panel"><h2>📄 Report Entry & Printing</h2><div class="body">
+<div class="grid"><label>Search Report / Patient<input id="reportSearch" oninput="renderReports()"></label><label>Filter<select id="reportFilter" onchange="renderReports()"><option value="all">All</option><option value="pending">Pending</option><option value="completed">Completed</option></select></label></div>
+<div class="scroll"><table><thead><tr><th>Report No.</th><th>Sample</th><th>Patient</th><th>Tests</th><th>Status</th><th>Action</th><th>Delete Record</th></tr></thead><tbody id="reportRows"></tbody></table></div>
+</div></div>
+</section>
+
+<section id="search" class="page">
+<div class="panel"><h2>🔎 Patient Search / Previous History / Dues</h2><div class="body">
+<label>Search by name, phone, sample or report number<input id="patientSearch" oninput="renderPatients()"></label>
+<div class="scroll"><table><thead><tr><th>Sample</th><th>Date</th><th>Patient</th><th>Phone</th><th>Doctor</th><th>Total</th><th>Paid</th><th>Due</th><th>History</th></tr></thead><tbody id="patientRows"></tbody></table></div>
+</div></div>
+</section>
+
+<section id="accounts" class="page">
+<div class="panel"><h2>💰 Accounts / Statements</h2><div class="body">
+<div class="grid4"><label>From Date<input id="accFrom" type="date"></label><label>To Date<input id="accTo" type="date"></label><label>Payment Received<input id="accReceived" readonly></label><label>Total Due<input id="accDue" readonly></label></div>
+<table><thead><tr><th>Date</th><th>Sample</th><th>Patient</th><th>Total</th><th>Paid</th><th>Due</th></tr></thead><tbody id="accountRows"></tbody></table>
+</div></div>
+</section>
+
+<section id="incentive" class="page">
+<div class="panel"><h2>👨‍⚕️ Doctor Share / Incentive</h2><div class="body">
+<p class="notice">Doctor share is calculated from the percentage saved in Tests/Doctor settings. Review before payment.</p>
+<table><thead><tr><th>Doctor</th><th>Cases</th><th>Total Billing</th><th>Share %</th><th>Incentive</th></tr></thead><tbody id="incentiveRows"></tbody></table>
+</div></div>
+</section>
+
+<section id="tests" class="page">
+<div class="panel"><h2>🧪 Tests Management</h2><div class="body">
+<div class="grid4"><label>Test Name<input id="tName"></label><label>Price<input id="tPrice" type="number"></label><label>Male Reference<input id="tMale"></label><label>Female Reference<input id="tFemale"></label><label>Age-specific Reference<input id="tAge"></label><label>Doctor Share %<input id="tShare" type="number" value="0"></label></div>
+<label>Parameters (one per line, format: Parameter | Unit | Male Range | Female Range)<textarea id="tParams" rows="4" placeholder="Haemoglobin | g/dL | 13-18 | 11.5-16"></textarea></label>
+<div class="actions"><button class="primary" onclick="addTest()">Add / Update Test</button><button onclick="loadDefaultTests()">Restore Default Tests</button></div>
+<table><thead><tr><th>Test</th><th>Price</th><th>Male Ref.</th><th>Female Ref.</th><th>Share</th><th>Action</th></tr></thead><tbody id="testRows"></tbody></table>
+</div></div>
+</section>
+
+<section id="expenses" class="page">
+<div class="panel"><h2>7 - Expenses</h2><div class="body">
+<div class="grid4"><label>Date<input id="eDate" type="date"></label><label>Description<input id="eDesc"></label><label>Amount<input id="eAmount" type="number"></label><label>Category<input id="eCat" placeholder="Rent, reagent, electricity..."></label></div>
+<button class="primary" onclick="addExpense()">Save Expense</button>
+<table><thead><tr><th>Date</th><th>Description</th><th>Category</th><th>Amount</th><th>Action</th></tr></thead><tbody id="expenseRows"></tbody></table>
+</div></div>
+</section>
+
+<section id="records" class="page">
+<div class="panel"><h2>📋 Date-wise Test Records / Authorized Delete</h2><div class="body">
+<div class="notice">Saved receipts automatically appear here. Use Date From / Date To or Search to find records. Only Admin can delete records.</div>
+<div class="grid4">
+<label>Date From<input id="recordFrom" type="date"></label>
+<label>Date To<input id="recordTo" type="date"></label>
+<div class="actions" style="align-items:end"><button type="button" class="primary" onclick="searchRecords()">Search</button></div>
+<div class="actions" style="align-items:end"><button type="button" onclick="clearRecordFilters()">Clear Filters</button><button type="button" onclick="window.printRecords()">Print Records</button></div>
+</div>
+<table id="recordsTable"><thead><tr><th>Date / Time</th><th>MR / Lab No.</th><th>Patient Name</th><th>Specimen</th><th>Tests</th><th>Status</th><th>Action</th></tr></thead><tbody id="recordRows"></tbody></table>
+<hr><h3>Authorized Delete</h3>
+<label>MR / Lab No. to delete<input id="deleteSample" placeholder="Enter MR / Lab No."></label><button class="danger" onclick="deleteRecord()">Delete Record (Admin only)</button>
+<hr><h3>Audit Log</h3><table><thead><tr><th>Time</th><th>User</th><th>Action</th><th>Record</th></tr></thead><tbody id="auditRows"></tbody></table>
+</div></div>
+</section>
+
+<section id="inventory" class="page">
+<div class="panel"><h2>📦 Kits / Reagents Inventory</h2><div class="body">
+<div class="grid4"><label>Item / Kit Name<input id="iName"></label><label>Lot No.<input id="iLot"></label><label>Quantity<input id="iQty" type="number"></label><label>Unit<input id="iUnit" placeholder="tests, boxes, ml"></label><label>Expiry Date<input id="iExpiry" type="date"></label><label>Minimum Stock<input id="iMin" type="number" value="5"></label></div>
+<button class="primary" onclick="addInventory()">Save Inventory Item</button>
+<table><thead><tr><th>Item</th><th>Lot</th><th>Qty</th><th>Unit</th><th>Expiry</th><th>Warning</th><th>Action</th></tr></thead><tbody id="inventoryRows"></tbody></table>
+</div></div>
+</section>
+
+<section id="settings" class="page">
+<div class="panel"><h2>⚙ Lab Settings / Users</h2><div class="body">
+<div class="settingsTabs"><button type="button" class="settingsTab active" onclick="openSettingTab('labTab',this)">🏥 Lab Settings</button><button type="button" class="settingsTab" onclick="openSettingTab('loginTab',this)">🔐 Login / Users</button><button type="button" class="settingsTab" onclick="openSettingTab('printTab',this)">🖨️ Print Settings</button><button type="button" class="settingsTab" onclick="openSettingTab('headingTab',this)">Heading Print</button><button type="button" class="settingsTab" onclick="openSettingTab('appearanceTab',this)">Appearance / Theme</button></div>
+<div id="labTab" class="settingTabPane active"><h3>Lab Information</h3><div class="grid4"><label>Lab Name<input id="sLab"></label><label>Lab Bio<input id="sBio" placeholder="Clinical Lab & Digital X-Ray"></label><label>Address<input id="sAddress"></label><label>Phone<input id="sPhone"></label><label>Report Signatory<input id="sSign"></label><label>Despatch By<input id="sDespatchBy" placeholder="Enter despatch person name"></label></div><button class="primary" onclick="saveSettings()">Save Lab Settings</button></div>
+<div id="loginTab" class="settingTabPane hidden"><h3>Login / Users & Permissions</h3><label class="toggleLine"><input id="loginRequired" type="checkbox" style="width:auto"> Require application login password (ON/OFF)</label><p class="notice">OFF ہونے پر ایپ بغیر login کے کھلے گی۔ ON ہونے پر login ضروری ہوگا۔</p><div class="grid4"><label>Username<input id="uName"></label><label>Password<input id="uPass" type="password"></label><label>Role<select id="uRole"><option>Admin</option><option>Reception</option><option>Lab Technician</option><option>Doctor</option></select></label><label>Permissions<select id="uPerm" multiple size="4"><option value="receipt">Sample Receipt</option><option value="reports">Report Entry</option><option value="accounts">Accounts</option><option value="delete">Delete Records</option></select></label></div><button onclick="saveUser()">Add / Update User</button><table><thead><tr><th>Username</th><th>Role</th><th>Permissions</th><th>Action</th></tr></thead><tbody id="userRows"></tbody></table><hr><h3>Password Change</h3><div class="grid"><label>Current Password<input id="oldPass" type="password"></label><label>New Password<input id="newPass" type="password"></label></div><button onclick="changePassword()">Change My Password</button><hr><h3>Backup & Restore</h3><button onclick="backup()">⬇ Export Full Backup</button><input type="file" id="restoreInput" accept=".json"><button onclick="restore()">Restore Backup</button></div>
+<div id="printTab" class="settingTabPane hidden"><h3>Print Settings</h3><div class="notice"><b>Report Header:</b> چون آپ کے اصل کاغذ پر heading پہلے سے موجود ہے، Lab Name اور Address/Phone کو OFF رکھیں۔</div><label><input id="showPrintLab" type="checkbox" style="width:auto"> Show lab name on printed report</label><label><input id="showPrintAddress" type="checkbox" style="width:auto"> Show address/phone on printed report</label><div class="grid4"><label>Report title font size<select id="pTitleSize"><option value="18pt">Small</option><option value="22pt">Medium</option><option value="26pt">Large</option></select></label><label>Heading font size<select id="pHeadingSize"><option value="12pt">Small</option><option value="15pt">Medium</option><option value="18pt">Large</option></select></label><label>Body font size<select id="pBodySize"><option value="9pt">Small</option><option value="11pt">Medium</option><option value="13pt">Large</option></select></label><label>Test table font size<select id="pTableSize"><option value="7pt">Very Small</option><option value="9pt">Small</option><option value="11pt">Medium</option></select></label><label>Top space for pre-printed heading<select id="pTopSpace"><option value="0mm">None</option><option value="25mm">Small</option><option value="38mm">Medium</option><option value="50mm">Large</option><option value="65mm">Extra Large</option></select></label><label>Page top position (mm)<input id="pPageTop" type="number" min="0" max="100" step="1" value="10" placeholder="10"></label><label>Page bottom space (mm)<input id="pPageBottom" type="number" min="0" max="50" step="1" value="5" placeholder="5"></label><label>Page left margin (mm)<input id="pPageLeft" type="number" min="0" max="30" step="1" value="7" placeholder="7"></label><label>Page right margin (mm)<input id="pPageRight" type="number" min="0" max="30" step="1" value="7" placeholder="7"></label></div><div class="grid4"><label><input id="pShowPatient" type="checkbox" style="width:auto"> Show patient details</label><label><input id="pShowDoctor" type="checkbox" style="width:auto"> Show doctor</label><label><input id="pShowComments" type="checkbox" style="width:auto"> Show comments</label><label><input id="pShowSign" type="checkbox" style="width:auto"> Authorized Signature: ON / OFF</label></div><div id="v86FinalControls" style="margin-top:12px;padding:10px;border:1px solid #8dbbd8;background:#f7fcff"><h3 style="margin:0 0 7px">Test Parameters Print Controls</h3><div class="grid4"><label><input id="v86HorizontalLines" type="checkbox" style="width:auto"> Show horizontal lines</label><label><input id="v86VerticalLines" type="checkbox" style="width:auto"> Show vertical lines</label><label><input id="v86HeadingColor" type="checkbox" style="width:auto"> Show light color behind test name</label><label>Results alignment<select id="v86ResultAlign"><option value="left">Left side</option><option value="center">Center</option><option value="right">Right side</option><option value="justify">Justify</option></select></label></div><div class="notice" style="margin-top:7px">These settings affect report test tables and result values in Print / PDF.</div></div><button class="primary" onclick="saveSettings()">Save Print Settings</button></div>
+<div id="headingTab" class="settingTabPane hidden"><h3>Heading Print Controls</h3><p class="notice">یہاں سے فیصلہ کریں کہ report کی اپنی heading دکھانی ہے یا صرف پہلے سے printed paper کی heading کے نیچے report شروع کرنی ہے۔</p><label><input id="headingModePreprinted" type="checkbox" style="width:auto"> Use pre-printed paper heading (hide digital heading)</label><p>Pre-printed heading ON ہونے پر Lab Name اور Address/Phone خود بخود print report سے hide رہیں گے اور Top Space استعمال ہوگا۔</p><button class="primary" onclick="saveSettings()">Save Heading Settings</button></div>
+<div id="appearanceTab" class="settingTabPane hidden"><h3>Appearance / Theme & Background</h3><div class="themeCard"><b>یہاں سے پورے سسٹم کا look اپنی مرضی سے تبدیل کریں</b><span class="fileNote">Colors صرف اسی browser اور اسی computer میں محفوظ ہوں گے۔</span></div><div class="appearanceGrid"><label>Page Background Color<input id="aBgColor" class="colorInput" type="color"></label><label>Panel Background Color<input id="aPanelColor" class="colorInput" type="color"></label><label>Heading Color<input id="aHeadingColor" class="colorInput" type="color"></label><label>Accent Color<input id="aAccentColor" class="colorInput" type="color"></label><label>Heading Text Color<input id="aHeadingTextColor" class="colorInput" type="color"></label><label>Theme Style<select id="aThemeStyle" onchange="setThemePreset(this.value)"><option value="blue">Professional Blue</option><option value="teal">Fresh Teal</option><option value="purple">Modern Purple</option><option value="green">Medical Green</option><option value="dark">Elegant Dark</option></select></label></div><label>Background Image (اپنے PC/mobile سے تصویر منتخب کریں)<input id="aBgImage" type="file" accept="image/*"></label><button type="button" onclick="clearBgImage()">Remove Background Image</button><button type="button" class="primary" onclick="saveAppearance()">Save Appearance</button><p class="fileNote">تصویر local طور پر اسی browser میں محفوظ ہوگی؛ کسی server پر upload نہیں ہوگی۔</p></div>
+<p id="settingsMsg"></p></div></div>
+</section>
+</main>
+
+<aside class="right">
+<h3>PENDING REPORTS</h3>
+<div id="pendingList"></div>
+<h3 style="margin-top:12px">LOGIN ACTIVITY</h3>
+<div id="activityList" class="small"></div>
+</aside>
+</div>
+<div class="footer"><span id="footerLabName">Mumtaz Lab</span> • Offline Laboratory Management System • Backup data regularly<br><b>Manage by Arshad Maken</b></div>
+
+<div id="reportModal" class="modal hidden"><div><div class="noPrint" style="text-align:right"><button onclick="closeModal()">Close</button></div><div id="reportContent"></div></div></div>
+
+<script>
+const DBKEY='mumtaz_lab_professional_v1';
+const defaultTests=[
+{name:'CBC',price:800,male:'Hb 13-18; WBC 4-11; Platelets 150-450',female:'Hb 11.5-16; WBC 4-11; Platelets 150-450',age:'Age-specific review required',share:0,params:[['Haemoglobin','g/dL','13-18','11.5-16'],['WBC (TLC)','x10^9/L','4-11','4-11'],['RBC','x10^12/L','4.5-6.5','4.0-5.5'],['MCV','fL','80-96','76-96'],['MCH','pg','27-32','27-32'],['MCHC','g/dL','30-35','30-35'],['Platelets','x10^9/L','150-450','150-450'],['Neutrophils','%','40-75','40-75'],['Lymphocytes','%','20-45','20-45'],['Monocytes','%','2-10','2-10'],['Eosinophils','%','1-6','1-6']]},
+{name:'LFT',price:1200,male:'See parameter ranges',female:'See parameter ranges',age:'Age-specific review required',share:0,params:[['ALT/SGPT','U/L','0-45','0-35'],['AST/SGOT','U/L','0-40','0-35'],['Total Bilirubin','mg/dL','0.2-1.2','0.2-1.2'],['ALP','U/L','40-129','35-104']]},
+{name:'RFT',price:1000,male:'See parameter ranges',female:'See parameter ranges',age:'Age-specific review required',share:0,params:[['Urea','mg/dL','15-45','15-45'],['Creatinine','mg/dL','0.7-1.3','0.6-1.1'],['Uric Acid','mg/dL','3.4-7.0','2.4-6.0']]},
+{name:'Blood Sugar',price:300,male:'Fasting 70-100',female:'Fasting 70-100',age:'Consult age-specific range',share:0,params:[['Blood Glucose','mg/dL','70-100 fasting','70-100 fasting']]},
+{name:'Lipid Profile',price:1200,male:'TC <200; TG <150',female:'TC <200; TG <150',age:'Age-specific review required',share:0,params:[['Total Cholesterol','mg/dL','<200','<200'],['Triglycerides','mg/dL','<150','<150'],['HDL','mg/dL','>40','>50'],['LDL','mg/dL','<100','<100']]},
+{name:'Urine R/E',price:400,male:'See report',female:'See report',age:'See report',share:0,params:[['Colour','-','Pale yellow','Pale yellow'],['Turbidity','-','Clear','Clear'],['Deposit','-','Nil','Nil'],['Sp. Gravity','-','1.005-1.030','1.005-1.030'],['pH','-','Acidic','Acidic'],['Glucose','-','Negative','Negative'],['Protein','-','Negative','Negative'],['Ketone','-','Negative','Negative'],['Urobilinogen','-','Normal','Normal'],['Bilirubin','-','Negative','Negative'],['Blood','-','Negative','Negative'],['Leucocytes','-','Negative','Negative'],['Pus Cells','/HPF','0-5','0-5'],['Epithelial Cell','/HPF','Few','Few'],['RBC','/HPF','0-2','0-2'],['Crystals','/HPF','Nil','Nil'],['Casts','/HPF','Nil','Nil'],['Amorphous','/HPF','Nil','Nil'],['Yeast Cells','/HPF','Nil','Nil'],['Spermatozoa','/HPF','Nil','Nil'],['Bacteria','/HPF','Nil','Nil']]},
+{name:'HBsAg',price:500,male:'Negative',female:'Negative',age:'Negative',share:0,params:[['HBsAg','-','Negative','Negative']]}
+];
+let db=JSON.parse(localStorage.getItem(DBKEY)||'null')||{
+settings:{lab:'Mumtaz Lab',address:'',phone:'',sign:'Authorized Signatory',showPrintLab:true,showPrintAddress:true,appearance:{bg:'#cfe8f7',panel:'#eaf7ff',heading:'#0875b4',accent:'#0879c9',headingText:'#ffffff',theme:'blue',bgImage:''},printConfig:{title:'22pt',heading:'15pt',body:'11pt',table:'9pt',topSpace:'38mm',pageTop:10,pageBottom:5,pageLeft:7,pageRight:7,patient:true,doctor:true,comments:true,sign:true}},
+tests:defaultTests,patients:[],reports:[],expenses:[],inventory:[],audit:[],activity:[],
+users:{
+ admin:{password:'admin123',role:'Admin',permissions:['all']},
+ reception:{password:'reception123',role:'Reception',permissions:['receipt','reports','search']},
+ tech:{password:'tech123',role:'Lab Technician',permissions:['reports','search']},
+ doctor:{password:'doctor123',role:'Doctor',permissions:['reports','search']}
+}};
+// Safe catalogue restoration: add missing built-in tests without deleting or overwriting user tests.
+(function restoreMissingDefaultTests(){
+  db.tests=Array.isArray(db.tests)?db.tests:[];
+  defaultTests.forEach(function(def){
+    var found=db.tests.find(function(t){return String(t.name||'').toLowerCase()===String(def.name).toLowerCase();});
+    if(!found) db.tests.push(JSON.parse(JSON.stringify(def)));
+    else if(!Array.isArray(found.params)||!found.params.length) found.params=JSON.parse(JSON.stringify(def.params||[]));
+  });
+  localStorage.setItem(DBKEY,JSON.stringify(db));
+})();
+// V8.3 correction: always synchronize the saved Urine R/E definition
+// with the complete 21-parameter list, even when older localStorage data exists.
+(function syncCompleteUrineRE(){
+  const urineTemplate=defaultTests.find(t=>t.name==='Urine R/E');
+  if(urineTemplate){
+    const savedUrine=(db.tests||[]).find(t=>t.name==='Urine R/E');
+    if(savedUrine){
+      savedUrine.params=JSON.parse(JSON.stringify(urineTemplate.params));
+      savedUrine.price=urineTemplate.price;
+      savedUrine.male=urineTemplate.male;
+      savedUrine.female=urineTemplate.female;
+      savedUrine.age=urineTemplate.age;
+    } else {
+      db.tests=db.tests||[];
+      db.tests.push(JSON.parse(JSON.stringify(urineTemplate)));
+    }
+    localStorage.setItem(DBKEY,JSON.stringify(db));
+  }
+})();
+let current=null,lastReceipt=null;
+if(!db.settings || typeof db.settings!=='object') db.settings={lab:'Mumtaz Lab',address:'',phone:'',sign:'Authorized Signatory',showPrintLab:true,showPrintAddress:true};
+if(db.settings.despatchBy===undefined)db.settings.despatchBy='';
+if(!db.settings.printConfig)db.settings.printConfig={};
+if(!db.settings.appearance)db.settings.appearance={bg:'#cfe8f7',panel:'#eaf7ff',heading:'#0875b4',accent:'#0879c9',headingText:'#ffffff',theme:'blue',bgImage:''};
+if(!Array.isArray(db.audit)) db.audit=[];
+if(!Array.isArray(db.activity)) db.activity=[];
+if(!db.settings.printConfig)db.settings.printConfig={title:'22pt',heading:'15pt',body:'11pt',table:'9pt',patient:true,doctor:true,comments:true,sign:true};
+if(db.settings.printConfig.topSpace===undefined)db.settings.printConfig.topSpace='38mm';if(db.settings.printConfig.pageTop===undefined)db.settings.printConfig.pageTop=10;if(!db.settings.printConfig._pageTopDown7mm){db.settings.printConfig.pageTop=12;db.settings.printConfig._pageTopDown7mm=true;localStorage.setItem(DBKEY,JSON.stringify(db));}if(db.settings.printConfig.pageBottom===undefined)db.settings.printConfig.pageBottom=5;if(db.settings.printConfig.pageLeft===undefined)db.settings.printConfig.pageLeft=7;if(db.settings.printConfig.pageRight===undefined)db.settings.printConfig.pageRight=7;
+if(db.settings.printConfig.patient===undefined)db.settings.printConfig.patient=true;if(db.settings.printConfig.doctor===undefined)db.settings.printConfig.doctor=true;if(db.settings.printConfig.comments===undefined)db.settings.printConfig.comments=true;if(db.settings.printConfig.sign===undefined)db.settings.printConfig.sign=true;
+// Compatibility migration: supports old V1/V2/V3 saved data and fixes login/signup.
+const defaultUsers={
+ admin:{password:'admin123',role:'Admin',permissions:['all']},
+ reception:{password:'reception123',role:'Reception',permissions:['receipt','reports','search']},
+ tech:{password:'tech123',role:'Lab Technician',permissions:['reports','search']},
+ doctor:{password:'doctor123',role:'Doctor',permissions:['reports','search']}
+};
+if(!db.users || typeof db.users!=='object' || Array.isArray(db.users)) db.users={};
+Object.keys(defaultUsers).forEach(function(k){
+  if(!db.users[k]) db.users[k]=defaultUsers[k];
+  else if(typeof db.users[k]==='string') db.users[k]={password:db.users[k],role:defaultUsers[k].role,permissions:defaultUsers[k].permissions};
+  else {
+    if(!db.users[k].password && db.users[k].pass) db.users[k].password=db.users[k].pass;
+    if(!db.users[k].role) db.users[k].role=defaultUsers[k].role;
+    if(!Array.isArray(db.users[k].permissions)) db.users[k].permissions=defaultUsers[k].permissions;
+  }
+});
+save();
+
+function save(){localStorage.setItem(DBKEY,JSON.stringify(db))}
+function today(){return new Date().toISOString().slice(0,10)}
+function now(){return new Date().toLocaleString()}
+function money(n){return 'Rs. '+Number(n||0).toLocaleString()}
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function login(){
+ let u=document.getElementById('loginUser').value.trim().toLowerCase(),p=document.getElementById('loginPass').value;
+ let record=db.users[u];
+ if(typeof record==='string') record={password:record,role:'Reception',permissions:['receipt','reports','search']};
+ if(record && String(record.password)===String(p)){
+   current={name:u,...record};
+   db.activity.unshift({time:now(),user:u,action:'Login'});
+   db.activity=db.activity.slice(0,30); save();
+   document.getElementById('loginError').textContent='';
+   document.getElementById('loginScreen').classList.add('hidden');
+   document.getElementById('topLogout').classList.remove('hidden');
+   document.getElementById('loginStatus').childNodes[0].textContent='Logged in: '+u+' ('+current.role+') ';
+   document.getElementById('authModal').classList.add('hidden');
+   init(); go('dashboard');
+ } else document.getElementById('loginError').textContent='Invalid username or password.';
+}
+function showAuth(mode){
+  document.getElementById('authModal').classList.remove('hidden');
+  document.getElementById('authMsg').textContent='';
+  document.getElementById('authUser').value='';
+  document.getElementById('authPass').value='';
+  document.getElementById('authConfirm').value='';
+  document.getElementById('authName').value='';
+  const signup=mode==='signup';
+  document.getElementById('authTitle').textContent=signup?'Create New Account':'Reset Password';
+  document.getElementById('authHelp').textContent=signup?'Create a local account for this computer. Admin privileges can only be assigned by an administrator.':'Enter an existing username and choose a new password.';
+  document.getElementById('authNameLabel').classList.toggle('hidden',!signup);
+  document.getElementById('authConfirmLabel').classList.toggle('hidden',!signup);
+  document.getElementById('authRoleLabel').classList.toggle('hidden',!signup);
+  document.querySelector('#authModal button.primary').textContent=signup?'Create Account':'Reset Password';
+  window.authMode=mode;
+}
+function closeAuth(){document.getElementById('authModal').classList.add('hidden')}
+function submitAuth(){
+  if(!db.users||typeof db.users!=='object'||Array.isArray(db.users))db.users={};
+  let u=document.getElementById('authUser').value.trim().toLowerCase();
+  let pw=document.getElementById('authPass').value;
+  let msg=document.getElementById('authMsg');
+  if(!/^[a-z0-9._-]{3,30}$/.test(u)){msg.textContent='Username 3-30 characters: letters, numbers, dot, underscore or hyphen.';return}
+  if(pw.length<4){msg.textContent='Password must be at least 4 characters.';return}
+  if(window.authMode==='signup'){
+    let full=document.getElementById('authName').value.trim();
+    let confirm=document.getElementById('authConfirm').value;
+    if(full.length<2){msg.textContent='Please enter your full name.';return}
+    if(pw!==confirm){msg.textContent='Passwords do not match.';return}
+    if(db.users[u]){msg.textContent='Username already exists. Choose another username.';return}
+    let role=document.getElementById('authRole').value;
+    let perms=role==='Reception'?['receipt','reports','search']:['reports','search'];
+    db.users[u]={password:pw,name:full,role:role,permissions:perms};
+    db.audit.unshift({time:now(),user:'System',action:'Created user',record:u+' ('+full+')'});
+    save();
+    msg.innerHTML='<span class="success">Account created successfully! Close this window and login with your new username and password.</span>';
+    document.getElementById('authPass').value='';document.getElementById('authConfirm').value='';
+  }else{
+    if(!db.users[u]){msg.textContent='Username not found.';return}
+    db.users[u].password=pw;
+    db.audit.unshift({time:now(),user:'System',action:'Password reset',record:u});
+    save();
+    msg.innerHTML='<span class="success">Password reset successfully. You can now login.</span>';
+  }
+}
+function logout(){if(current){db.activity.unshift({time:now(),user:current.name,action:'Logout'});save()}location.reload()}
+function can(x){return current&&(current.permissions.includes('all')||current.permissions.includes(x))}
+function go(id){
+ if(!current)return;
+ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');
+ document.querySelectorAll('.menu button').forEach(b=>b.classList.toggle('active',b.dataset.page===id));
+ refresh();
+}
+function init(){
+ document.getElementById('rDate').value=now();document.getElementById('eDate').value=today();
+ document.getElementById('sLab').value=db.settings.lab;document.getElementById('sBio').value=db.settings.bio||'';if(document.getElementById('sDespatchBy'))document.getElementById('sDespatchBy').value=db.settings.despatchBy||'';document.getElementById('sAddress').value=db.settings.address;document.getElementById('sPhone').value=db.settings.phone;document.getElementById('sSign').value=db.settings.sign;document.getElementById('showPrintLab').checked=db.settings.showPrintLab!==false;document.getElementById('showPrintAddress').checked=db.settings.showPrintAddress!==false;document.getElementById('pTitleSize').value=db.settings.printConfig.title;document.getElementById('pHeadingSize').value=db.settings.printConfig.heading;document.getElementById('pBodySize').value=db.settings.printConfig.body;document.getElementById('pTableSize').value=db.settings.printConfig.table;document.getElementById('pShowPatient').checked=db.settings.printConfig.patient;document.getElementById('pShowDoctor').checked=db.settings.printConfig.doctor;document.getElementById('pShowComments').checked=db.settings.printConfig.comments;document.getElementById('pShowSign').checked=db.settings.printConfig.sign;const a=db.settings.appearance||{};document.getElementById('aBgColor').value=a.bg||'#cfe8f7';document.getElementById('aPanelColor').value=a.panel||'#eaf7ff';document.getElementById('aHeadingColor').value=a.heading||'#0875b4';document.getElementById('aAccentColor').value=a.accent||'#0879c9';document.getElementById('aHeadingTextColor').value=a.headingText||'#ffffff';document.getElementById('aThemeStyle').value=a.theme||'blue';applyAppearance();
+ populateTests();newReceipt();refresh();if(typeof applyBrand==='function')applyBrand();
+}
+function syncTestChecks(){let sel=document.getElementById('rTests');if(!sel)return;let vals=[...document.querySelectorAll('#rTestChecks input[type=checkbox]:checked')].map(x=>x.value);[...sel.options].forEach(o=>o.selected=vals.includes(o.value));calcReceipt()}
+function populateTests(query=''){let sel=document.getElementById('rTests'),box=document.getElementById('rTestChecks');if(!sel||!box)return;let selected=new Set([...sel.selectedOptions].map(o=>o.value)),q=String(query||'').toLowerCase().trim(),arr=db.tests.filter(t=>!q||String(t.name||'').toLowerCase().includes(q)||String(t.category||'').toLowerCase().includes(q)||selected.has(t.name));sel.innerHTML=arr.map(t=>`<option value="${esc(t.name)}" ${selected.has(t.name)?'selected':''}>${esc(t.name)} - ${money(t.price)}</option>`).join('');box.innerHTML=arr.map(t=>`<label class="testCheckItem"><input type="checkbox" value="${esc(t.name)}" ${selected.has(t.name)?'checked':''} onchange="syncTestChecks()"><span>${esc(t.name)} - ${money(t.price)}</span></label>`).join('')||'<span>No tests found.</span>';syncTestChecks()}
+function newReceipt(){document.getElementById('rSample').value='';document.getElementById('rDate').value=now();['rName','rAge','rPhone','rDoctor','rBarcode'].forEach(x=>document.getElementById(x).value='');document.getElementById('rRelation').value='S/O';document.getElementById('rRelationName').value='';document.getElementById('rTestSearch').value='';populateTests('');document.querySelectorAll('#rTests option').forEach(o=>o.selected=false);document.getElementById('rPaid').value=0;document.getElementById('rDiscount').value=0;calcReceipt()}
+document.getElementById('rTests').addEventListener('change',calcReceipt);document.getElementById('rPaid').addEventListener('input',calcReceipt);document.getElementById('rDiscount').addEventListener('input',calcReceipt);
+function calcReceipt(){let ts=[...document.getElementById('rTests').selectedOptions].map(o=>o.value),total=ts.reduce((s,n)=>s+(db.tests.find(t=>t.name===n)?.price||0),0),dis=Number(document.getElementById('rDiscount').value||0),paid=Number(document.getElementById('rPaid').value||0);total=Math.max(0,total-dis);document.getElementById('rTotal').value=total;document.getElementById('rDue').value=Math.max(0,total-paid)}
+function saveReceipt(){
+ // Keep Sample Receipt usable even if the local file opens with an old session state.
+ if(!current){
+   current={name:'admin',role:'Admin',permissions:['all']};
+   const st=document.getElementById('loginStatus');
+   if(st) st.childNodes[0].textContent='Logged in: admin (Admin) ';
+   const lo=document.getElementById('topLogout');
+   if(lo) lo.classList.remove('hidden');
+ }
+ if(!can('receipt'))return alert('Your role does not have permission for Sample Receipt.');
+ let name=document.getElementById('rName').value.trim(),relationType=document.getElementById('rRelation').value,relationName=document.getElementById('rRelationName').value.trim(),relation=(relationName?relationType+' '+relationName:relationType),tests=[...document.getElementById('rTests').selectedOptions].map(o=>o.value);
+ if(!document.getElementById('rSample').value.trim())return alert('Please enter Sample / Lab No.');
+ if(!name||!tests.length)return alert('Patient name and at least one test are required.');
+ calcReceipt();let sample=document.getElementById('rSample').value,total=Number(document.getElementById('rTotal').value),paid=Number(document.getElementById('rPaid').value),due=Number(document.getElementById('rDue').value);
+ let p={sample,date:document.getElementById('rDate').value,name,relationType,relationName,relation,age:document.getElementById('rAge').value,gender:document.getElementById('rGender').value,phone:document.getElementById('rPhone').value,address:document.getElementById('rAddress').value,doctor:document.getElementById('rDoctor').value,barcode:document.getElementById('rBarcode').value,specimen:document.getElementById('rSpecimen').value,referral:(window._referralDraft||{fromLab:document.getElementById('refFromLab')?.value||'',fromAddress:document.getElementById('refFromAddress')?.value||'',fromPhone:document.getElementById('refFromPhone')?.value||'',despatchBy:document.getElementById('refFromDespatch')?.value||'',toLab:document.getElementById('refToLab')?.value||'',toAddress:document.getElementById('refToAddress')?.value||'',toPhone:document.getElementById('refToPhone')?.value||''}),tests,total,paid,due};
+ db.patients.unshift(p);db.reports.unshift({id:'R-'+sample.slice(3),sample,patient:name,tests,status:'Pending',values:{},created:p.date});lastReceipt=p;db.audit.unshift({time:now(),user:current.name,action:'Created receipt',record:sample});save();document.getElementById('receiptMsg').innerHTML='<span class="success">Receipt saved successfully. Report is pending.</span>';refresh()
+}
+function renderReports(){
+ let q=(document.getElementById('reportSearch')?.value||'').toLowerCase(),f=document.getElementById('reportFilter')?.value||'all';
+ let arr=db.reports.filter(r=>(f==='all'||r.status.toLowerCase()===f)&&(JSON.stringify(r).toLowerCase().includes(q)));
+ document.getElementById('reportRows').innerHTML=arr.map(r=>`<tr><td>${r.id}</td><td>${r.sample}</td><td>${esc(r.patient)}</td><td>${esc(r.tests.join(', '))}</td><td><b style="color:${r.status==='Pending'?'#b00':'#087329'}">${r.status}</b></td><td><button onclick="openReport('${r.id}')">Enter / Open</button></td></tr>`).join('')
+}
+function openReport(id){
+ if(!can('reports'))return alert('Your role does not have permission for Report Entry.');
+ let r=db.reports.find(x=>x.id===id),p=db.patients.find(x=>x.sample===r.sample);if(!r||!p)return;
+ let cfg=db.settings.printConfig||{},rows=[];
+ r.tests.forEach(tn=>{let t=db.tests.find(x=>x.name===tn);(t?.params?.length?t.params:[['Result','-','See report','See report']]).forEach((x,i)=>{let key=tn+'__'+i;rows.push(`<tr><td>${esc(x[0])}</td><td><input id="res_${safe(key)}" value="${esc(r.values[key]||'')}"></td><td>${esc(p.gender==='Female'?x[3]:x[2])}</td><td>${esc(x[1])}</td></tr>`)})});
+ let head=(db.settings.showPrintLab!==false?`<h1>${esc(db.settings.lab)}</h1>`:'')+(db.settings.showPrintAddress!==false?`<div style="text-align:center">${esc(db.settings.address)} ${db.settings.phone?'| '+esc(db.settings.phone):''}</div>`:'');
+ let relType=p.relationType||'',relName=p.relationName||'';
+  if(!relType && p.relation){
+    let rm=String(p.relation).match(/^(S\/O|D\/O|W\/O|H\/O|Self|Guardian)\s*(.*)$/i);
+    if(rm){relType=rm[1];relName=rm[2]||'';}else{relType=p.relation;}
+  }
+  let patientInfo=cfg.patient!==false?`<div class="reportPatientBox"><div class="patientGrid">
+    <div><b>Patient Name:</b> ${esc(p.name)}</div>
+    <div><b>Relation:</b> ${esc(relType)}</div>
+    <div><b>Relation Name:</b> ${esc(relName)}</div>
+    <div><b>Age:</b> ${esc(p.age)}</div>
+    <div><b>Gender:</b> ${esc(p.gender)}</div>
+    <div><b>Phone:</b> ${esc(p.phone)}</div>
+    <div><b>MR / Lab No:</b> ${esc(p.sample)}</div>
+    <div><b>Date:</b> ${esc(p.date||r.created)}</div>
+    ${cfg.doctor!==false?`<div><b>Doctor / Ref. By:</b> ${esc(p.doctor)}</div>`:''}
+  </div>${p.address?`<div class="patientAddress"><b>Address:</b> ${esc(p.address)}</div>`:''}</div>`:'';
+ let comments=cfg.comments!==false?`<p><b>Comments:</b> Results should be interpreted by the referring doctor along with clinical findings.</p>`:'';
+ let sign=cfg.sign!==false?`<br><p><b>Authorized Signatory:</b> ${esc(db.settings.sign)}</p>`:'';
+ document.getElementById('reportContent').innerHTML=`<div class="reportPaper" style="--print-title:${cfg.title||'22pt'};--print-heading:${cfg.heading||'15pt'};--print-body:${cfg.body||'11pt'};--print-table:${cfg.table||'9pt'};--page-top:${cfg.pageTop??10}mm;--page-bottom:${cfg.pageBottom??5}mm;--page-left:${cfg.pageLeft??7}mm;--page-right:${cfg.pageRight??7}mm">${head}<p><b>Report No:</b> ${r.id} &nbsp; <b>MR / Lab No:</b> ${r.sample} &nbsp; <b>Date:</b> ${r.created}</p>${patientInfo}<table><tr><th>Test / Parameter</th><th>Result</th><th>Reference Range</th><th>Unit</th></tr>${rows.join('')}</table>${comments}${sign}<div class="noPrint actions"><button class="primary" onclick="saveReport('${r.id}')">Save Results</button><button onclick="window.print()">Print / PDF</button></div></div>`;
+ document.getElementById('reportModal').classList.remove('hidden')
+}
+function safe(s){return s.replace(/[^a-z0-9]/gi,'_')}
+function saveReport(id){let r=db.reports.find(x=>x.id===id),p=db.patients.find(x=>x.sample===r.sample);r.paramSelection={};r.tests.forEach(tn=>{let t=db.tests.find(x=>x.name===tn),params=t?.params?.length?t.params:[['Result']];r.paramSelection[tn]=[...document.querySelectorAll('.param-choice[data-test=\"'+CSS.escape(tn)+'\"]:checked')].map(x=>Number(x.dataset.index));params.forEach((x,i)=>{let key=tn+'__'+i,el=document.getElementById('res_'+safe(key));if(el)r.values[key]=el.value})});r.status='Completed';db.audit.unshift({time:now(),user:current.name,action:'Completed report',record:r.id});save();alert('Report saved successfully.');closeModal();refresh()}
+function closeModal(){document.getElementById('reportModal').classList.add('hidden')}
+function renderPatients(){let q=(document.getElementById('patientSearch')?.value||'').toLowerCase();let arr=db.patients.filter(p=>JSON.stringify(p).toLowerCase().includes(q));document.getElementById('patientRows').innerHTML=arr.map(p=>`<tr><td>${p.sample}</td><td>${p.date}</td><td>${esc(p.name)}</td><td>${esc(p.phone)}</td><td>${esc(p.doctor)}</td><td>${money(p.total)}</td><td>${money(p.paid)}</td><td style="color:${p.due?'#b00':'#087329'}">${money(p.due)}</td><td><button onclick="historyPatient('${p.sample}')">Reports</button></td></tr>`).join('')}
+function historyPatient(sample){let p=db.patients.find(x=>x.sample===sample);alert('Patient: '+p.name+'\
+Sample: '+p.sample+'\
+Tests: '+p.tests.join(', ')+'\
+Total: '+money(p.total)+'\
+Paid: '+money(p.paid)+'\
+Due: '+money(p.due))}
+function renderAccounts(){let rows=db.patients;document.getElementById('accountRows').innerHTML=rows.map(p=>`<tr><td>${p.date}</td><td>${p.sample}</td><td>${esc(p.name)}</td><td>${money(p.total)}</td><td>${money(p.paid)}</td><td>${money(p.due)}</td></tr>`).join('');document.getElementById('accReceived').value=money(rows.reduce((s,p)=>s+p.paid,0));document.getElementById('accDue').value=money(rows.reduce((s,p)=>s+p.due,0))}
+function renderIncentive(){let map={};db.patients.forEach(p=>{let d=p.doctor||'SELF';if(!map[d])map[d]={cases:0,total:0,share:0};map[d].cases++;map[d].total+=p.total;let avg=p.tests.reduce((s,n)=>s+(db.tests.find(t=>t.name===n)?.share||0),0)/(p.tests.length||1);map[d].share=avg});document.getElementById('incentiveRows').innerHTML=Object.entries(map).map(([d,x])=>`<tr><td>${esc(d)}</td><td>${x.cases}</td><td>${money(x.total)}</td><td>${x.share.toFixed(1)}%</td><td>${money(x.total*x.share/100)}</td></tr>`).join('')}
+function addTest(){let n=document.getElementById('tName').value.trim();if(!n)return alert('Enter test name');let t={name:n,price:Number(document.getElementById('tPrice').value||0),male:document.getElementById('tMale').value,female:document.getElementById('tFemale').value,age:document.getElementById('tAge').value,share:Number(document.getElementById('tShare').value||0),params:document.getElementById('tParams').value.split('\
+').filter(Boolean).map(x=>x.split('|').map(y=>y.trim()))};let old=db.tests.findIndex(x=>x.name.toLowerCase()===n.toLowerCase());if(old>=0)db.tests[old]=t;else db.tests.push(t);save();populateTests();renderTests();alert('Test saved.')}
+function renderTests(){document.getElementById('testRows').innerHTML=db.tests.map(t=>`<tr><td>${esc(t.name)}</td><td>${money(t.price)}</td><td>${esc(t.male)}</td><td>${esc(t.female)}</td><td>${t.share}%</td><td><button onclick="editTest('${esc(t.name)}')">Edit</button> <button class="danger" onclick="deleteTest('${esc(t.name)}')">Delete</button></td></tr>`).join('')}
+function editTest(n){let t=db.tests.find(x=>x.name===n);document.getElementById('tName').value=t.name;document.getElementById('tPrice').value=t.price;document.getElementById('tMale').value=t.male;document.getElementById('tFemale').value=t.female;document.getElementById('tAge').value=t.age;document.getElementById('tShare').value=t.share;document.getElementById('tParams').value=(t.params||[]).map(x=>x.join(' | ')).join('\
+')}
+function deleteTest(n){if(!can('all'))return alert('Only Admin can delete tests.');if(!confirm('Delete test: '+n+'?'))return;db.tests=db.tests.filter(t=>t.name!==n);save();populateTests();renderTests();}
+function loadDefaultTests(){db.tests=JSON.parse(JSON.stringify(defaultTests));save();populateTests();renderTests();alert('Default tests restored.')}
+function addExpense(){let d=document.getElementById('eDate').value,desc=document.getElementById('eDesc').value,a=Number(document.getElementById('eAmount').value||0),cat=document.getElementById('eCat').value;if(!desc||!a)return alert('Enter description and amount');db.expenses.unshift({date:d,desc,amount:a,cat});save();renderExpenses()}
+function renderExpenses(){document.getElementById('expenseRows').innerHTML=db.expenses.map((e,i)=>`<tr><td>${e.date}</td><td>${esc(e.desc)}</td><td>${esc(e.cat)}</td><td>${money(e.amount)}</td><td><button class="danger" onclick="db.expenses.splice(${i},1);save();renderExpenses()">Delete</button></td></tr>`).join('')}
+function addInventory(){let x={name:document.getElementById('iName').value,lot:document.getElementById('iLot').value,qty:Number(document.getElementById('iQty').value||0),unit:document.getElementById('iUnit').value,expiry:document.getElementById('iExpiry').value,min:Number(document.getElementById('iMin').value||5)};if(!x.name)return alert('Enter item name');db.inventory.unshift(x);save();renderInventory()}
+function renderInventory(){document.getElementById('inventoryRows').innerHTML=db.inventory.map((x,i)=>{let low=x.qty<=x.min,exp=x.expiry&&x.expiry<today();return `<tr><td>${esc(x.name)}</td><td>${esc(x.lot)}</td><td>${x.qty}</td><td>${esc(x.unit)}</td><td>${x.expiry}</td><td style="color:${low||exp?'#b00':'#087329'}">${low?'LOW STOCK ':''}${exp?'EXPIRED':''}</td><td><button class="danger" onclick="db.inventory.splice(${i},1);save();renderInventory()">Delete</button></td></tr>`}).join('')}
+function deleteRecord(){if(!can('delete'))return alert('Only Admin is authorized to delete records.');let s=document.getElementById('deleteSample').value.trim(),i=db.patients.findIndex(p=>p.sample===s);if(i<0)return alert('Sample not found.');if(!confirm('Delete this patient and report?'))return;db.patients.splice(i,1);db.reports=db.reports.filter(r=>r.sample!==s);db.audit.unshift({time:now(),user:current.name,action:'DELETED patient/report',record:s});save();refresh();alert('Record deleted and audit entry created.')}
+function setThemePreset(v){const presets={blue:{bg:'#cfe8f7',panel:'#eaf7ff',heading:'#0875b4',accent:'#0879c9',headingText:'#ffffff'},teal:{bg:'#dff5f2',panel:'#effcfb',heading:'#087f83',accent:'#0aa6a6',headingText:'#ffffff'},purple:{bg:'#eee8fb',panel:'#faf7ff',heading:'#6842a5',accent:'#8b5cf6',headingText:'#ffffff'},green:{bg:'#e4f4e8',panel:'#f5fff7',heading:'#19734a',accent:'#2e9d62',headingText:'#ffffff'},dark:{bg:'#202b35',panel:'#e9eef2',heading:'#263b4b',accent:'#3b82a8',headingText:'#ffffff'}};const a=presets[v]||presets.blue;for(const k of ['bg','panel','heading','accent','headingText']){const el=document.getElementById('a'+k.charAt(0).toUpperCase()+k.slice(1)+'Color');if(el)el.value=a[k]}applyAppearancePreview(a)}
+function applyAppearancePreview(a){document.documentElement.style.setProperty('--page-bg',a.bg);document.documentElement.style.setProperty('--panel-bg',a.panel);document.documentElement.style.setProperty('--heading-bg',a.heading);document.documentElement.style.setProperty('--accent',a.accent);document.documentElement.style.setProperty('--heading-text',a.headingText)}
+function applyAppearance(){const a=db.settings.appearance||{};document.documentElement.style.setProperty('--page-bg',a.bg||'#cfe8f7');document.documentElement.style.setProperty('--panel-bg',a.panel||'#eaf7ff');document.documentElement.style.setProperty('--heading-bg',a.heading||'#0875b4');document.documentElement.style.setProperty('--accent',a.accent||'#0879c9');document.documentElement.style.setProperty('--heading-text',a.headingText||'#fff');document.body.style.backgroundImage=a.bgImage?'url("'+a.bgImage+'")':'none';document.body.style.backgroundColor=a.bg||'#cfe8f7';}
+function saveAppearance(){const f=document.getElementById('aBgImage').files[0],a=db.settings.appearance||{};a.bg=document.getElementById('aBgColor').value;a.panel=document.getElementById('aPanelColor').value;a.heading=document.getElementById('aHeadingColor').value;a.accent=document.getElementById('aAccentColor').value;a.headingText=document.getElementById('aHeadingTextColor').value;a.theme=document.getElementById('aThemeStyle').value;const finish=()=>{db.settings.appearance=a;save();applyAppearance();document.getElementById('settingsMsg').innerHTML='<span class="success">Appearance saved successfully.</span>';};if(f){const r=new FileReader();r.onload=()=>{a.bgImage=r.result;finish()};r.readAsDataURL(f)}else finish()}
+function clearBgImage(){db.settings.appearance.bgImage='';save();applyAppearance();document.getElementById('aBgImage').value='';}
+function saveSettings(){
+  db.settings=db.settings||{};
+  var pc=db.settings.printConfig||{};
+  db.settings={...db.settings,
+    lab:document.getElementById('sLab').value||'Mumtaz Lab',
+    bio:document.getElementById('sBio').value,
+    address:document.getElementById('sAddress').value,
+    phone:document.getElementById('sPhone').value,
+    sign:document.getElementById('sSign').value,
+    despatchBy:(document.getElementById('sDespatchBy')?.value||'').trim(),
+    showPrintLab:document.getElementById('showPrintLab').checked,
+    showPrintAddress:document.getElementById('showPrintAddress').checked,
+    printConfig:{...pc,
+      title:document.getElementById('pTitleSize').value,
+      heading:document.getElementById('pHeadingSize').value,
+      body:document.getElementById('pBodySize').value,
+      table:document.getElementById('pTableSize').value,
+      topSpace:document.getElementById('pTopSpace').value,
+      pageTop:Number(document.getElementById('pPageTop').value||10),
+      pageBottom:Number(document.getElementById('pPageBottom').value||5),
+      pageLeft:Number(document.getElementById('pPageLeft').value||7),
+      pageRight:Number(document.getElementById('pPageRight').value||7),
+      patient:document.getElementById('pShowPatient').checked,
+      doctor:document.getElementById('pShowDoctor').checked,
+      comments:document.getElementById('pShowComments').checked,
+      sign:document.getElementById('pShowSign').checked
+    }
+  };
+  save();applyBrand();
+  var m=document.getElementById('settingsMsg');if(m)m.innerHTML='<span class="success">Lab and print settings saved.</span>';
+}
+function applyBrand(){applyAppearance();
+  const lab=db.settings.lab||'Mumtaz Lab';
+  document.getElementById('labTitle').textContent=lab.toUpperCase();
+  document.getElementById('dashboardLabName').textContent=lab;
+  document.getElementById('sideLabName').innerHTML=esc(lab).replace(/\\s+/g,'<br>');
+  document.getElementById('footerLabName').textContent=lab;
+  document.getElementById('labSub').innerHTML='Address: '+esc(db.settings.address||'')+'<br>Contact: '+esc(db.settings.phone||'');
+  const bioEl=document.getElementById('dashboardBio');
+  if(bioEl){
+    bioEl.textContent=db.settings.bio||'';
+    bioEl.style.display=(db.settings.bio||'').trim()?'block':'none';
+  }
+}
+function saveUser(){if(!can('all'))return alert('Only Admin can manage users.');let n=document.getElementById('uName').value.trim().toLowerCase(),p=document.getElementById('uPass').value,role=document.getElementById('uRole').value,per=[...document.getElementById('uPerm').selectedOptions].map(x=>x.value);if(!n||!p)return alert('Username and password required');db.users[n]={password:p,role,permissions:per};save();renderUsers();alert('User saved.')}
+function renderUsers(){document.getElementById('userRows').innerHTML=Object.entries(db.users).map(([n,u])=>`<tr><td>${n}</td><td>${u.role}</td><td>${u.permissions.join(', ')}</td><td><button class="danger" onclick="deleteUser('${n}')">Delete</button></td></tr>`).join('')}
+function deleteUser(n){if(n==='admin')return alert('Main admin cannot be deleted.');if(!can('all'))return alert('Admin only');delete db.users[n];save();renderUsers()}
+function changePassword(){let o=document.getElementById('oldPass').value,n=document.getElementById('newPass').value;if(db.users[current.name].password!==o)return alert('Current password is incorrect.');if(n.length<4)return alert('New password must be at least 4 characters.');db.users[current.name].password=n;save();alert('Password changed successfully.')}
+function backup(){let b=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='mumtaz-lab-backup-'+today()+'.json';a.click()}
+function restore(){let f=document.getElementById('restoreInput').files[0];if(!f)return alert('Select a backup file.');let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);if(!x.settings||!x.users)throw 1;db=x;save();location.reload()}catch(e){alert('Invalid backup file.')}};r.readAsText(f)}
+
+function saveReferralDetails(){
+ const p={fromLab:db.settings.lab||'Mumtaz Lab',fromAddress:db.settings.address||'',fromPhone:db.settings.phone||'',despatchBy:db.settings.despatchBy||'',toLab:document.getElementById('refToLab').value.trim(),toAddress:document.getElementById('refToAddress').value.trim(),toPhone:document.getElementById('refToPhone').value.trim()};
+ if(!p.toLab)return alert('Enter destination lab / hospital name.');
+ window._referralDraft=p;
+ const m=document.getElementById('referralMsg'); if(m)m.innerHTML='<span class="success">Transfer details saved for this receipt.</span>';
+}
+document.getElementById('rSpecimen')?.addEventListener('change',function(){
+ document.getElementById('referralBox').classList.toggle('hidden',this.value!=='Brought in Lab');
+});
+
+function printLastReceipt(){if(!lastReceipt)return alert('Save a receipt first.');let p=lastReceipt,cfg=db.settings.printConfig||{},printHead=(db.settings.showPrintLab!==false?`<h1>${esc(db.settings.lab)}</h1>`:'')+(db.settings.showPrintAddress!==false?`<div style="text-align:center">${esc(db.settings.address)} ${db.settings.phone?'| '+esc(db.settings.phone):''}</div>`:'');document.getElementById('reportContent').innerHTML=`<div class="reportPaper" style="--print-title:${cfg.title||'22pt'};--print-heading:${cfg.heading||'15pt'};--print-body:${cfg.body||'11pt'};--print-table:${cfg.table||'9pt'};--page-top:${cfg.pageTop??10}mm;--page-bottom:${cfg.pageBottom??5}mm;--page-left:${cfg.pageLeft??7}mm;--page-right:${cfg.pageRight??7}mm">${printHead}<h2>Sample Receipt</h2><p><b>MR / Lab No:</b> ${p.sample}<br><b>Date:</b> ${p.date}<br><b>Patient:</b> ${esc(p.name)} ${esc(p.relation||'')}<br><b>Age/Gender:</b> ${p.age}/${p.gender}<br><b>Phone:</b> ${esc(p.phone)}<br><b>Specimen:</b> ${esc(p.specimen||'Taken in Lab')}<br>${p.specimen==='Brought in Lab'&&p.referral?`<b>Brought in Lab From:</b> ${esc(p.referral.fromLab||'')} | ${esc(p.referral.fromAddress||'')} | ${esc(p.referral.fromPhone||'')} | <b>Despatch By:</b> ${esc(p.referral.despatchBy||'')}<br><b>Brought in Lab To:</b> ${esc(p.referral.toLab||'')} | ${esc(p.referral.toAddress||'')} | ${esc(p.referral.toPhone||'')}<br>`:''}<b>Doctor:</b> ${esc(p.doctor)}</p><table><tr><th>Test</th><th>Charges</th></tr>${p.tests.map(t=>`<tr><td>${esc(t)}</td><td>${money(db.tests.find(x=>x.name===t)?.price||0)}</td></tr>`).join('')}</table><p><b>Total:</b> ${money(p.total)} &nbsp; <b>Paid:</b> ${money(p.paid)} &nbsp; <b>Due:</b> ${money(p.due)}</p><div class="noPrint"><button onclick="window.print()">Print</button></div></div>`;document.getElementById('reportModal').classList.remove('hidden')}
+function refresh(){applyBrand();renderReports();renderPatients();renderAccounts();renderIncentive();renderTests();renderExpenses();renderInventory();renderUsers();document.getElementById('pendingList').innerHTML=db.reports.filter(r=>r.status==='Pending').slice(0,15).map(r=>`<div class="pending"><b>${r.sample}</b><br>${esc(r.patient)}<br><button onclick="openReport('${r.id}')">Open Report</button></div>`).join('')||'<p>No pending reports.</p>';document.getElementById('activityList').innerHTML=db.activity.slice(0,12).map(a=>`<div>${a.time}<br><b>${a.user}</b>: ${a.action}</div><hr>`).join('');let td=today(),ps=db.patients.filter(p=>p.date.startsWith(td));document.getElementById('stPatients').textContent=ps.length;document.getElementById('stTests').textContent=ps.reduce((s,p)=>s+p.tests.length,0);document.getElementById('stCollection').textContent=money(ps.reduce((s,p)=>s+p.paid,0));document.getElementById('stPending').textContent=db.reports.filter(r=>r.status==='Pending').length;document.getElementById('stDue').textContent=money(db.patients.reduce((s,p)=>s+p.due,0));let ym=td.slice(0,7);document.getElementById('stMonth').textContent=money(db.patients.filter(p=>p.date.startsWith(ym)).reduce((s,p)=>s+p.paid,0))}
+</script>
+
+<script>
+(function(){
+ const extraTests=[
+  ['Hematology','ESR'],['Hematology','Hemoglobin (Hb)'],['Hematology','Platelet Count'],['Hematology','Blood Group & Rh'],['Hematology','Reticulocyte Count'],['Hematology','Peripheral Smear'],['Hematology','Absolute Eosinophil Count (AEC)'],['Hematology','Bleeding Time (BT)'],['Hematology','Clotting Time (CT)'],['Hematology','PT / INR'],['Hematology','APTT'],['Hematology','Sickling Test'],
+  ['Microscopy','Urine R/E'],['Microscopy','Urine C/E'],['Microscopy','Stool R/E'],['Microscopy','Stool for Occult Blood'],['Microscopy','Semen Analysis'],['Microscopy','Sputum R/E'],['Microscopy','Skin Scraping for Fungus'],
+  ['Serology','HBsAg'],['Serology','Anti-HCV'],['Serology','HIV I & II'],['Serology','VDRL / RPR'],['Serology','CRP'],['Serology','ASO Titre'],['Serology','RA Factor'],['Serology','Widal Test'],['Serology','Brucella Agglutination'],['Serology','Typhidot IgM'],['Serology','Typhidot IgG'],['Serology','Pregnancy Test (β-hCG)'],
+  ['Malaria','Malaria Parasite (MP)'],['Malaria','Malaria Antigen / ICT'],['Malaria','Malaria Pf/Pan'],
+  ['Dengue','Dengue NS1 Antigen'],['Dengue','Dengue IgM'],['Dengue','Dengue IgG'],['Dengue','Dengue Profile (NS1/IgM/IgG)'],
+  ['TB','AFB Smear for TB'],['TB','GeneXpert MTB/RIF (TB)'],['TB','TB Screening'],['TB','Tuberculin Skin Test (Mantoux)'],
+  ['Allergy','Total IgE'],['Allergy','Allergy Screening'],
+  ['Chemistry','Fasting Blood Sugar (FBS)'],['Chemistry','Random Blood Sugar (RBS)'],['Chemistry','HbA1c'],['Chemistry','Urea'],['Chemistry','Creatinine'],['Chemistry','Uric Acid'],['Chemistry','Bilirubin Total'],['Chemistry','Bilirubin Direct'],['Chemistry','ALT / SGPT'],['Chemistry','AST / SGOT'],['Chemistry','Alkaline Phosphatase (ALP)'],['Chemistry','Total Protein'],['Chemistry','Albumin'],['Chemistry','Calcium'],['Chemistry','Phosphorus'],['Chemistry','Sodium'],['Chemistry','Potassium'],['Chemistry','Chloride'],['Chemistry','Amylase'],['Chemistry','Lipase'],['Chemistry','Lipid Profile'],['Chemistry','Cholesterol'],['Chemistry','Triglycerides'],['Chemistry','HDL'],['Chemistry','LDL'],
+  ['Immunology','ANA'],['Immunology','Anti-dsDNA'],['Immunology','C3 Complement'],['Immunology','C4 Complement'],
+  ['Hormones','TSH'],['Hormones','T3'],['Hormones','T4'],['Hormones','Free T3'],['Hormones','Free T4'],['Hormones','FSH'],['Hormones','LH'],['Hormones','Prolactin'],['Hormones','Testosterone'],['Hormones','Progesterone'],['Hormones','Estradiol (E2)'],['Hormones','Cortisol'],
+  ['Cardiac','Troponin-I'],['Cardiac','CK-MB'],['Cardiac','BNP'],
+  ['Coagulation','D-Dimer'],['Coagulation','Fibrinogen'],
+  ['Liver / Renal','LFT'],['Liver / Renal','RFT'],
+  ['Other','Vitamin D'],['Other','Vitamin B12'],['Other','Ferritin'],['Other','Iron Profile'],['Other','PSA'],['Other','CEA'],['Other','CA-125'],['Other','CA 19-9'],['Other','AFP']
+ ];
+ function ensureData(){
+  db.settings=db.settings||{}; db.settings.lab=db.settings.lab||'Mumtaz Lab'; db.settings.bio=db.settings.bio||''; db.settings.loginRequired=db.settings.loginRequired!==false;
+  db.settings.preprinted=db.settings.preprinted!==false; db.settings.showPrintLab=db.settings.preprinted?false:(db.settings.showPrintLab!==false); db.settings.showPrintAddress=db.settings.preprinted?false:(db.settings.showPrintAddress!==false);
+  db.settings.printConfig=db.settings.printConfig||{}; Object.assign(db.settings.printConfig,{title:db.settings.printConfig.title||'22pt',heading:db.settings.printConfig.heading||'15pt',body:db.settings.printConfig.body||'11pt',table:db.settings.printConfig.table||'9pt',patient:db.settings.printConfig.patient!==false,doctor:db.settings.printConfig.doctor!==false,comments:db.settings.printConfig.comments!==false,sign:db.settings.printConfig.sign!==false,topSpace:db.settings.printConfig.topSpace||'38mm'});
+  db.doctors=Array.isArray(db.doctors)?db.doctors:[];
+  if(!Array.isArray(db.tests))db.tests=[];
+  extraTests.forEach(([category,name])=>{if(!db.tests.some(t=>t.name.toLowerCase()===name.toLowerCase()))db.tests.push({name,category,price:0,male:'See report',female:'See report',age:'Age-specific review required',share:0,params:[['Result','-','See report','See report']]});});
+  db.tests.forEach(t=>{if(!t.category)t.category='General';}); save();
+ }
+ function fillDoctors(){const sel=document.getElementById('rDoctor');if(!sel)return;const old=sel.value;sel.innerHTML='<option value="">Select Doctor / Self</option>'+db.doctors.map(d=>'<option>'+esc(d)+'</option>').join('');if(old)sel.value=old;}
+ window.addDoctor=function(){let d=prompt('Enter doctor name / referral source:');if(!d)return;d=d.trim();if(!d)return;if(!db.doctors.includes(d)){db.doctors.push(d);save();}fillDoctors();document.getElementById('rDoctor').value=d;};
+ window.openSettingTab=function(id,btn){document.querySelectorAll('.settingTabPane').forEach(x=>x.classList.add('hidden'));document.getElementById(id).classList.remove('hidden');document.querySelectorAll('.settingsTab').forEach(x=>x.classList.remove('active'));btn.classList.add('active');};
+ const oldPopulate=window.populateTests;
+ window.populateTests=function(query=''){const sel=document.getElementById('rTests');if(!sel)return;const selected=new Set([...sel.selectedOptions].map(o=>o.value));const q=String(query||'').toLowerCase().trim();const arr=db.tests.filter(t=>!q||t.name.toLowerCase().includes(q)||(t.category||'').toLowerCase().includes(q)||selected.has(t.name));sel.innerHTML=arr.map(t=>'<option value="'+esc(t.name)+'" '+(selected.has(t.name)?'selected':'')+'>'+esc(t.name)+' - '+money(t.price)+'</option>').join('');};
+ const oldLoad=window.loadSettings;
+ window.loadSettings=function(){if(oldLoad)oldLoad();ensureData();document.getElementById('sBio').value=db.settings.bio||'';document.getElementById('loginRequired').checked=db.settings.loginRequired!==false;document.getElementById('pTopSpace').value=db.settings.printConfig.topSpace||'38mm';document.getElementById('pPageTop').value=db.settings.printConfig.pageTop??10;document.getElementById('pPageBottom').value=db.settings.printConfig.pageBottom??5;document.getElementById('pPageLeft').value=db.settings.printConfig.pageLeft??7;document.getElementById('pPageRight').value=db.settings.printConfig.pageRight??7;document.getElementById('headingModePreprinted').checked=db.settings.preprinted!==false;fillDoctors();};
+ window.saveSettings=function(){db.settings.lab=document.getElementById('sLab').value||'Mumtaz Lab';db.settings.bio=document.getElementById('sBio').value||'';db.settings.address=document.getElementById('sAddress').value||'';db.settings.phone=document.getElementById('sPhone').value||'';db.settings.sign=document.getElementById('sSign').value||'';db.settings.loginRequired=document.getElementById('loginRequired').checked;db.settings.preprinted=document.getElementById('headingModePreprinted').checked;db.settings.showPrintLab=db.settings.preprinted?false:document.getElementById('showPrintLab').checked;db.settings.showPrintAddress=db.settings.preprinted?false:document.getElementById('showPrintAddress').checked;db.settings.printConfig={title:document.getElementById('pTitleSize').value,heading:document.getElementById('pHeadingSize').value,body:document.getElementById('pBodySize').value,table:document.getElementById('pTableSize').value,topSpace:document.getElementById('pTopSpace').value,pageTop:Number(document.getElementById('pPageTop').value||10),pageBottom:Number(document.getElementById('pPageBottom').value||5),pageLeft:Number(document.getElementById('pPageLeft').value||7),pageRight:Number(document.getElementById('pPageRight').value||7),patient:document.getElementById('pShowPatient').checked,doctor:document.getElementById('pShowDoctor').checked,comments:document.getElementById('pShowComments').checked,sign:document.getElementById('pShowSign').checked};save();applyBrand();document.getElementById('settingsMsg').innerHTML='<span class="success">Settings saved successfully.</span>';};
+ const oldLogin=window.login;
+ function syncSettingFields(){ensureData();let ids={sLab:db.settings.lab,sBio:db.settings.bio||'',sAddress:db.settings.address||'',sPhone:db.settings.phone||'',sSign:db.settings.sign||''};Object.keys(ids).forEach(k=>{let e=document.getElementById(k);if(e)e.value=ids[k]});document.getElementById('loginRequired').checked=db.settings.loginRequired!==false;document.getElementById('headingModePreprinted').checked=db.settings.preprinted!==false;document.getElementById('showPrintLab').checked=db.settings.showPrintLab===true;document.getElementById('showPrintAddress').checked=db.settings.showPrintAddress===true;let c=db.settings.printConfig;document.getElementById('pTitleSize').value=c.title;document.getElementById('pHeadingSize').value=c.heading;document.getElementById('pBodySize').value=c.body;document.getElementById('pTableSize').value=c.table;document.getElementById('pTopSpace').value=c.topSpace||'38mm';document.getElementById('pPageTop').value=c.pageTop??10;document.getElementById('pPageBottom').value=c.pageBottom??5;document.getElementById('pPageLeft').value=c.pageLeft??7;document.getElementById('pPageRight').value=c.pageRight??7;document.getElementById('pShowPatient').checked=c.patient;document.getElementById('pShowDoctor').checked=c.doctor;document.getElementById('pShowComments').checked=c.comments;document.getElementById('pShowSign').checked=c.sign;fillDoctors();}
+window.login=function(){if(db.settings.loginRequired===false){current={name:'admin',role:'Admin',permissions:['all']};document.getElementById('loginScreen').classList.add('hidden');init();syncSettingFields();refresh();return;} oldLogin();if(current)syncSettingFields();};
+ function renderPatientBlock(p,cfg){if(cfg.patient===false)return '';let rt=p.relationType||'',rn=p.relationName||'';if(!rt&&p.relation){let m=String(p.relation).match(/^(S\/O|D\/O|W\/O|H\/O|Self|Guardian)\s*(.*)$/);if(m){rt=m[1];rn=m[2]||'';}else{rt=p.relation;}}return '<div class="reportPatientBox"><div class="patientGrid"><div><b>Patient Name:</b> '+esc(p.name||'')+'</div><div><b>Relation:</b> '+esc(rt)+'</div><div><b>Relation Name:</b> '+esc(rn)+'</div><div><b>Age:</b> '+esc(p.age||'')+'</div><div><b>Gender:</b> '+esc(p.gender||'')+'</div><div><b>Phone:</b> '+esc(p.phone||'')+'</div><div><b>MR / Lab No:</b> '+esc(p.sample||'')+'</div><div><b>Date:</b> '+esc(p.date||'')+'</div>'+(cfg.doctor!==false?'<div><b>Doctor / Ref. By:</b> '+esc(p.doctor||'')+'</div>':'')+'</div>'+(p.address?'<div class="patientAddress"><b>Address:</b> '+esc(p.address)+'</div>':'')+'</div>'; }
+ window.openReport=function(id){let r=db.reports.find(x=>x.id===id),p=db.patients.find(x=>x.sample===r.sample),cfg=db.settings.printConfig||{},rows=[];r.tests.forEach(tn=>{let t=db.tests.find(x=>x.name===tn)||{},params=t.params&&t.params.length?t.params:[['Result','-','See report','See report']];rows.push('<tr><th colspan="4" style="text-align:left;background:#e8f4fa;color:#123">'+esc(tn)+'</th></tr>');params.forEach((x,i)=>{let key=tn+'__'+i;rows.push('<tr><td>'+esc(x[0])+'</td><td><input id="res_'+safe(key)+'" value="'+esc(r.values[key]||'')+'"></td><td>'+esc(p.gender==='Female'?x[3]:x[2])+'</td><td>'+esc(x[1]||'')+'</td></tr>');});});let pre=db.settings.preprinted?' preprinted':''; let head=db.settings.preprinted?'':((db.settings.showPrintLab?'<h1>'+esc(db.settings.lab)+'</h1>':'')+(db.settings.showPrintAddress?'<div style="text-align:center">'+esc(db.settings.bio||'')+' '+esc(db.settings.address||'')+' '+(db.settings.phone?'| '+esc(db.settings.phone):'')+'</div>':''));let comments=cfg.comments!==false?'<p><b>Comments:</b> Results should be interpreted by the referring doctor along with clinical findings.</p>':'';let sign=cfg.sign!==false?'<p><b>Authorized Signatory:</b> '+esc(db.settings.sign||'')+'</p>':'';document.getElementById('reportContent').innerHTML='<div class="reportPaper'+pre+'" style="--print-title:'+cfg.title+';--print-heading:'+cfg.heading+';--print-body:'+cfg.body+';--print-table:'+cfg.table+';--preprinted-top:'+(cfg.topSpace||'38mm')+'">'+head+'<p><b>Report No:</b> '+esc(r.id)+'</p>'+renderPatientBlock(p,cfg)+'<table><tr><th>Test / Parameter</th><th>Result</th><th>Reference Range</th><th>Unit</th></tr>'+rows.join('')+'</table>'+comments+sign+'<div class="noPrint actions"><button class="primary" onclick="saveReport(\''+r.id+'\')">Save Results</button><button onclick="window.print()">Print / PDF</button></div></div>';document.getElementById('reportModal').classList.remove('hidden');};
+ window.printLastReceipt=function(){
+    if(!lastReceipt)return alert('Save a receipt first.');
+    let p=lastReceipt,cfg=db.settings.printConfig||{};
+    let head=(db.settings.preprinted?'':((db.settings.showPrintLab!==false?'<h1>'+esc(db.settings.lab||'')+'</h1>':'')+(db.settings.showPrintAddress!==false?'<div style="text-align:center">'+esc(db.settings.bio||'')+' '+esc(db.settings.address||'')+' '+(db.settings.phone?'| '+esc(db.settings.phone):'')+'</div>':'')));
+    let referral=(p.specimen==='Brought in Lab'&&p.referral)?'<div class="referralPrintBox"><h3>Sample Transfer / Referral Details</h3><table><tr><th>From</th><th>To</th></tr><tr><td><b>'+esc(db.settings.lab||'Mumtaz Lab')+'</b><br>Address: '+esc(db.settings.address||'')+'<br>Contact: '+esc(db.settings.phone||'')+'</td><td><b>'+esc(p.referral.toLab||'')+'</b><br>Address: '+esc(p.referral.toAddress||'')+'<br>Contact: '+esc(p.referral.toPhone||'')+'</td></tr></table></div>':'';
+    document.getElementById('reportContent').innerHTML='<div class="reportPaper'+(db.settings.preprinted?' preprinted':'')+'" style="--print-title:'+(cfg.title||'22pt')+';--print-heading:'+(cfg.heading||'15pt')+';--print-body:'+(cfg.body||'11pt')+';--print-table:'+(cfg.table||'9pt')+';--page-top:'+(Number(cfg.pageTop??10))+'mm;--page-bottom:'+(Number(cfg.pageBottom??5))+'mm;--page-left:'+(Number(cfg.pageLeft??7))+'mm;--page-right:'+(Number(cfg.pageRight??7))+'mm;--preprinted-top:'+(cfg.topSpace||'38mm')+'">'+head+'<h2>Sample Receipt</h2>'+renderPatientBlock(p,cfg)+'<table><tr><th>Test</th><th>Charges</th></tr>'+p.tests.map(t=>'<tr><td>'+esc(t)+'</td><td>'+money(db.tests.find(x=>x.name===t)?.price||0)+'</td></tr>').join('')+'</table><p><b>Total:</b> '+money(p.total)+' &nbsp; <b>Paid:</b> '+money(p.paid)+' &nbsp; <b>Due:</b> '+money(p.due)+'</p>'+referral+'<div class="noPrint"><button onclick="window.print()">Print / PDF</button></div></div>';
+    document.getElementById('reportModal').classList.remove('hidden');
+  };
+  window.syncTestChecks=window.syncTestChecks||function(){let sel=document.getElementById('rTests');if(!sel)return;let vals=[...document.querySelectorAll('#rTestChecks input[type=checkbox]:checked')].map(x=>x.value);[...sel.options].forEach(o=>o.selected=vals.includes(o.value));calcReceipt();};
+  window.newReceipt=(function(old){return function(){old();document.querySelectorAll('#rTestChecks input[type=checkbox]').forEach(x=>x.checked=false);let sel=document.getElementById('rTests');if(sel)[...sel.options].forEach(o=>o.selected=false);let a=document.getElementById('rAddress');if(a)a.value='';calcReceipt();}})(window.newReceipt);
+  window.saveReceipt=function(){
+    if(!can('receipt'))return alert('Your role does not have permission for Sample Receipt.');
+    let name=document.getElementById('rName').value.trim(), relationType=document.getElementById('rRelation').value,
+      relationName=document.getElementById('rRelationName').value.trim(), relation=(relationName?relationType+' '+relationName:relationType),
+      tests=[...document.getElementById('rTests').selectedOptions].map(o=>o.value), sample=document.getElementById('rSample').value.trim();
+    if(!sample)return alert('Please enter Sample No.');
+    if(!name||!tests.length)return alert('Patient name and at least one test are required.');
+    if(db.patients.some(p=>String(p.sample)===sample))return alert('This Sample No. already exists. Please enter a unique Sample No.');
+    calcReceipt();
+    let total=Number(document.getElementById('rTotal').value),paid=Number(document.getElementById('rPaid').value),due=Number(document.getElementById('rDue').value);
+    let p={sample,date:document.getElementById('rDate').value,name,relation,relationType,relationName,age:document.getElementById('rAge').value,gender:document.getElementById('rGender').value,phone:document.getElementById('rPhone').value,address:document.getElementById('rAddress')?.value||'',doctor:document.getElementById('rDoctor').value,specimen:document.getElementById('rSpecimen')?.value||'Taken in Lab',barcode:document.getElementById('rBarcode').value,tests,total,paid,due};
+    p.referral=(p.specimen==='Brought in Lab')?(window._referralDraft||{fromLab:document.getElementById('refFromLab')?.value.trim()||'',fromAddress:document.getElementById('refFromAddress')?.value.trim()||'',fromPhone:document.getElementById('refFromPhone')?.value.trim()||'',despatchBy:document.getElementById('refFromDespatch')?.value.trim()||'',toLab:document.getElementById('refToLab')?.value.trim()||'',toAddress:document.getElementById('refToAddress')?.value.trim()||'',toPhone:document.getElementById('refToPhone')?.value.trim()||''}):null;
+    db.settings=db.settings||{};
+    var reportNo=String(Number(db.settings.nextReportNo||1)).padStart(2,'0');
+    db.settings.nextReportNo=Number(reportNo)+1;
+    let rid='R-'+String(sample).replace(/[^a-zA-Z0-9_-]/g,'-')+'-'+Date.now();
+    p.reportNo=reportNo;
+    db.patients.unshift(p);db.reports.unshift({id:rid,reportNo:reportNo,sample,patient:name,tests,status:'Pending',values:{},created:p.date,specimen:p.specimen});lastReceipt=p;db.audit.unshift({time:now(),user:current.name,action:'Created receipt',record:sample+' / Report '+reportNo});save();document.getElementById('receiptMsg').innerHTML='<span class="success">Receipt saved successfully. Report No: '+reportNo+'</span>';refresh();
+  };
+  window.deleteReportRow=function(id){
+    if(!can('delete'))return alert('Only Admin is authorized to delete records.');
+    let r=db.reports.find(x=>x.id===id); if(!r)return;
+    if(!confirm('Delete report '+r.id+' and its patient record?'))return;
+    db.reports=db.reports.filter(x=>x.id!==id); db.patients=db.patients.filter(x=>x.sample!==r.sample);
+    db.audit.unshift({time:now(),user:current.name,action:'DELETED patient/report',record:r.sample+' / '+r.id});save();refresh();
+  };
+  window.renderReports=function(){
+    let q=(document.getElementById('reportSearch')?.value||'').toLowerCase(),f=document.getElementById('reportFilter')?.value||'all';
+    let arr=db.reports.filter(r=>(f==='all'||r.status.toLowerCase()===f)&&(JSON.stringify(r).toLowerCase().includes(q)));
+    document.getElementById('reportRows').innerHTML=arr.map(r=>`<tr><td>${esc(r.id)}</td><td>${esc(r.sample)}</td><td>${esc(r.patient)}</td><td>${esc(r.tests.map(cleanName).join(', '))}</td><td><b style="color:${r.status==='Pending'?'#b00':'#087329'}">${esc(r.status)}</b></td><td><button onclick="openReport('${esc(r.id)}')">Enter / Open</button></td><td><button class="danger" onclick="deleteReportRow('${esc(r.id)}')">Delete</button></td></tr>`).join('');
+  };
+  window.renderPatientBlock=function(p,cfg){
+    if(cfg.patient===false)return '';
+    let rt=p.relationType||'', rn=p.relationName||'';
+    if(!rt && p.relation){
+      let m=String(p.relation).match(/^(S\/O|D\/O|W\/O|H\/O|Self|Guardian)\s*(.*)$/);
+      if(m){rt=m[1];rn=m[2]||'';} else {rt=p.relation;}
+    }
+    return `<div class="reportPatientBox"><div class="patientField wide"><b>Patient Name:</b> ${esc(p.name||'')}</div><div class="patientField"><b>Relation:</b> ${esc(rt)}</div><div class="patientField"><b>Relation Name:</b> ${esc(rn)}</div><div class="patientField"><b>Age:</b> ${esc(p.age||'')}</div><div class="patientField"><b>Gender:</b> ${esc(p.gender||'')}</div><div class="patientField"><b>Phone:</b> ${esc(p.phone||'')}</div><div class="patientField"><b>MR / Lab No:</b> ${esc(p.sample||'')}</div><div class="patientField"><b>Date:</b> ${esc(p.date||'')}</div><div class="patientField"><b>Doctor / Ref. By:</b> ${esc(p.doctor||'')}</div><div class="patientField"><b>Specimen:</b> ${esc(p.specimen||'Taken in Lab')}</div><div class="patientField full"><b>Address:</b> ${esc(p.address||'')}</div></div>`;
+  };
+  window.resultOptions=function(test,param,range){
+    let n=String(param||'').toLowerCase(), opts=[];
+    if(n==='colour'||n==='color') opts=['Yellow','Pale Yellow','Dark Yellow','Reddish','Light Yellow'];
+    else if(n==='appearance'||n==='turbidity') opts=['Clear','Slightly Hazy','Turbid'];
+    else if(n==='deposit') opts=['Nil','Present'];
+    else if(n==='sp. gravity'||n==='sp gravity'||n==='specific gravity') opts=['1.005','1.010','1.015','1.020','1.025','1.030'];
+    else if(/epithelial/.test(n)) opts=['Nil','Few','Moderate','Many'];
+    else if(n==='ph') opts=['Acidic','Alkaline','Neutral'];
+    else if(/glucose|protein|ketone|bilirubin|blood|leucocytes/.test(n)) opts=['Nil','Negative','Trace','+','++','+++'];
+    else if(/urobilinogen/.test(n)) opts=['Normal','Nil','Increased'];
+    else if(/crystals/.test(n)) opts=['Nil','Ca-Oxalate','Uric Acid','Tripple Phosphates'];
+    else if(/casts/.test(n)) opts=['Nil','Hyaline','Granular','RBC Casts','WBC Casts'];
+    else if(/amorphous/.test(n)) opts=['Nil','Amorphous Urates','Amorphous Phosphates'];
+    else if(/yeast/.test(n)) opts=['Nil','Present'];
+    else if(/spermatozoa/.test(n)) opts=['Nil','Present'];
+    else if(/bacteria/.test(n)) opts=['Nil','Few','Moderate','Many'];
+    if(!opts.length)return '<input id="res_'+safe(test+'__'+arguments[3])+'" value="">';
+    return opts;
+  };
+  window.openReport=function(id){
+    if(!can('reports'))return alert('Your role does not have permission for Report Entry.');
+    let r=db.reports.find(x=>x.id===id),p=db.patients.find(x=>x.sample===r?.sample);if(!r||!p)return;
+    let cfg=db.settings.printConfig||{}, sections=[];
+    r.tests.forEach(tn=>{
+      let t=db.tests.find(x=>x.name===tn)||{},params=t.params&&t.params.length?t.params:[['Result','-','See report','See report']], rows=[];
+      
+      params.forEach((x,i)=>{
+        let key=tn+'__'+i, val=r.values[key]||'', n=String(x[0]||'').toLowerCase(), opts=[];
+        if(n==='colour'||n==='color') opts=['Yellow','Pale Yellow','Dark Yellow','Reddish','Light Yellow'];
+        else if(n==='appearance'||n==='turbidity') opts=['Clear','Slightly Hazy','Turbid'];
+        else if(n==='deposit') opts=['Nil','Present'];
+        else if(n==='sp. gravity'||n==='sp gravity'||n==='specific gravity') opts=['1.005','1.010','1.015','1.020','1.025','1.030'];
+        else if(/epithelial/.test(n)) opts=['Nil','Few','Moderate','Many'];
+        else if(n==='ph') opts=['Acidic','Alkaline','Neutral'];
+        else if(/glucose|protein|ketone|bilirubin|blood|leucocytes/.test(n)) opts=['Nil','Negative','Trace','+','++','+++'];
+        else if(/urobilinogen/.test(n)) opts=['Normal','Nil','Increased'];
+        else if(/crystals/.test(n)) opts=['Nil','Ca-Oxalate','Uric Acid','Tripple Phosphates'];
+        else if(/casts/.test(n)) opts=['Nil','Hyaline','Granular','RBC Casts','WBC Casts'];
+        else if(/amorphous/.test(n)) opts=['Nil','Amorphous Urates','Amorphous Phosphates'];
+        else if(/yeast|spermatozoa/.test(n)) opts=['Nil','Present'];
+        else if(/bacteria/.test(n)) opts=['Nil','Few','Moderate','Many'];
+        let input='';
+        if(opts.length) input='<select id="res_'+safe(key)+'"><option value="">Select</option>'+opts.map(v=>'<option value="'+esc(v)+'" '+(val===v?'selected':'')+'>'+esc(v)+'</option>').join('')+'</select>';
+        else input='<input id="res_'+safe(key)+'" value="'+esc(val)+'">';
+        rows.push('<tr><td>'+esc(x[0])+'</td><td>'+input+'</td><td>'+esc(p.gender==='Female'?x[3]:x[2])+'</td><td>'+esc(x[1]||'')+'</td></tr>');
+      });
+      sections.push('<div class="testHeading">'+esc(cleanName(tn))+'</div><table class="reportTestTable"><tr><th>Test / Parameter</th><th>Result</th><th>Reference Range</th><th>Unit</th></tr>'+rows.join('')+'</table>');
+    });
+    let pre=db.settings.preprinted?' preprinted':''; let head=db.settings.preprinted?'':((db.settings.showPrintLab?'<h1>'+esc(db.settings.lab)+'</h1>':'')+(db.settings.showPrintAddress?'<div style="text-align:center">'+esc(db.settings.bio||'')+' '+esc(db.settings.address||'')+' '+(db.settings.phone?'| '+esc(db.settings.phone):'')+'</div>':''));
+    let comments=cfg.comments!==false?'<p><b>Comments:</b> Results should be interpreted by the referring doctor along with clinical findings.</p>':'';
+    let sign=cfg.sign!==false?'<p><b>Authorized Signatory:</b> '+esc(db.settings.sign||'')+'</p>':'';
+    document.getElementById('reportContent').innerHTML='<div class="reportPaper'+(db.settings.preprinted?' preprinted':'')+'" style="--print-title:'+(cfg.title||'22pt')+';--print-heading:'+(cfg.heading||'15pt')+';--print-body:'+(cfg.body||'11pt')+';--print-table:'+(cfg.table||'9pt')+';--page-top:'+(Number(cfg.pageTop??10))+'mm;--page-bottom:'+(Number(cfg.pageBottom??5))+'mm;--page-left:'+(Number(cfg.pageLeft??7))+'mm;--page-right:'+(Number(cfg.pageRight??7))+'mm;--preprinted-top:'+(cfg.topSpace||'38mm')+'">'+head+'<p><b>Report No:</b> '+esc(r.id)+'</p>'+renderPatientBlock(p,cfg)+sections.join('')+comments+sign+'<div class="noPrint actions"><button class="primary" onclick="saveReport(\''+esc(r.id)+'\')">Save Results</button><button onclick="window.print()">Print / PDF</button></div></div>';
+    document.getElementById('reportModal').classList.remove('hidden');
+  };
+  window.toggleParamRows=function(){document.querySelectorAll('.param-row').forEach(row=>{let tn=row.dataset.test,idx=Number(row.dataset.index),c=[...document.querySelectorAll('.param-choice')].find(x=>x.dataset.test===tn&&Number(x.dataset.index)===idx);row.classList.toggle('param-row-hidden',!!c&&!c.checked);});};
+  // Migrate old records and preserve independent automatic report numbering.
+  try{if(db.settings&&!Number.isFinite(Number(db.settings.nextReportNo))){let max=0;(db.reports||[]).forEach(r=>{let m=String(r.id||'').match(/(\d+)$/);if(m)max=Math.max(max,Number(m[1]))});db.settings.nextReportNo=max+1;save();}}catch(e){}
+  document.addEventListener('DOMContentLoaded',function(){setTimeout(function(){let a=document.getElementById('rAddress');if(a&&!a.value)a.value='';populateTests();renderReports();},100);});
+})();
+</script>
+
+<!-- V8.4: separate boxed test headings and attached-style print layout -->
+
+<style id="v85CorrectionsAdditions">
+.reportPrintLine{border-top:1.5px solid #222;height:0;margin:7px 0;page-break-after:avoid}
+.doctorManageBox{margin-top:12px;padding-top:10px;border-top:1px solid #8dbbd8}
+</style>
+<script>
+(function(){
+  function cfg(){
+    db.settings=db.settings||{}; db.settings.printConfig=db.settings.printConfig||{};
+    const c=db.settings.printConfig;
+    if(c.line===undefined)c.line=false;
+    if(!c.linePosition)c.linePosition='afterHeading';
+    return c;
+  }
+  function renderDoctorManager(){
+    const body=document.getElementById('doctorRows85'); if(!body)return;
+    const ds=Array.isArray(db.doctors)?db.doctors:[];
+    body.innerHTML=ds.map((d,i)=>'<tr><td>'+esc(d)+'</td><td><button type="button" onclick="editDoctor85('+i+')">Edit</button> <button type="button" class="danger" onclick="deleteDoctor85('+i+')">Delete</button></td></tr>').join('')||'<tr><td colspan="2">No doctors added.</td></tr>';
+  }
+  function refreshDoctorSelect(){
+    const sel=document.getElementById('rDoctor'); if(!sel)return;
+    const old=sel.value;
+    sel.innerHTML='<option value="">Select Doctor / Self</option>'+(db.doctors||[]).map(d=>'<option value="'+esc(d)+'">'+esc(d)+'</option>').join('');
+    if(old && (db.doctors||[]).includes(old))sel.value=old;
+  }
+  window.editDoctor85=function(i){const e=document.getElementById('doctorName85');if(!e)return;e.value=db.doctors[i]||'';e.dataset.index=i;e.focus();};
+  window.clearDoctor85=function(){const e=document.getElementById('doctorName85');if(e){e.value='';delete e.dataset.index;}};
+  window.saveDoctor85=function(){
+    const e=document.getElementById('doctorName85'), d=(e?.value||'').trim();
+    if(!d)return alert('Enter doctor name / referral source.');
+    db.doctors=Array.isArray(db.doctors)?db.doctors:[];
+    const idx=e.dataset.index;
+    if(idx!==undefined){
+      const n=Number(idx); if(db.doctors.some((x,i)=>i!==n&&String(x).toLowerCase()===d.toLowerCase()))return alert('This doctor already exists.');
+      db.doctors[n]=d;
+    }else{
+      if(db.doctors.some(x=>String(x).toLowerCase()===d.toLowerCase()))return alert('This doctor already exists.');
+      db.doctors.push(d);
+    }
+    save(); refreshDoctorSelect(); renderDoctorManager(); clearDoctor85();
+  };
+  window.deleteDoctor85=function(i){
+    if(!can('all'))return alert('Only Admin can delete doctors.');
+    const d=(db.doctors||[])[i]; if(!d)return;
+    if(!confirm('Delete doctor / referral source: '+d+'?'))return;
+    db.doctors.splice(i,1); save(); refreshDoctorSelect(); renderDoctorManager();
+  };
+  function addDoctorManager(){
+    if(document.getElementById('doctorManage85'))return;
+    const lab=document.getElementById('labTab'); if(!lab)return;
+    const box=document.createElement('div'); box.id='doctorManage85'; box.className='doctorManageBox';
+    box.innerHTML='<h3>Doctor / Referral Sources Management</h3><p class="notice">Existing doctor ko edit ya delete karne ke liye yahan se manage karein. Receipt ki Doctor / Ref. By list bhi update hogi.</p><div class="grid"><label>Doctor / Referral Name<input id="doctorName85" placeholder="Enter doctor name"></label></div><div class="actions"><button class="primary" type="button" onclick="saveDoctor85()">Add / Update Doctor</button><button type="button" onclick="clearDoctor85()">Clear</button></div><table><thead><tr><th>Doctor / Referral Source</th><th>Action</th></tr></thead><tbody id="doctorRows85"></tbody></table>';
+    lab.appendChild(box); renderDoctorManager();
+  }
+  function addPrintLineControls(){
+    // Removed: report line controls are intentionally not part of Print Settings.
+    const old=document.getElementById('printLineManage85');
+    if(old)old.remove();
+  }
+  const oldSave=window.saveSettings;
+  window.saveSettings=function(){
+    if(oldSave)oldSave();
+    const old=document.getElementById('printLineManage85');
+    if(old)old.remove();
+    renderDoctorManager();
+  };
+  const oldRefresh=window.refresh;
+  window.refresh=function(){if(oldRefresh)oldRefresh();refreshDoctorSelect();renderDoctorManager();};
+  // No automatic report line is inserted into printed reports.
+  document.addEventListener('DOMContentLoaded',function(){addDoctorManager();addPrintLineControls();});
+  // Elements already exist because this script is at the end of the document.
+  addDoctorManager(); addPrintLineControls();
+})();
+</script>
+
+
+<style id="v85FinalPrintControls">
+/* Independent controls for the report parameter tables. */
+@media print {
+  .reportPaper.v85-no-horizontal .reportTestTable th,
+  .reportPaper.v85-no-horizontal .reportTestTable td {
+    border-top-color: transparent !important;
+    border-bottom-color: transparent !important;
+  }
+  .reportPaper.v85-no-horizontal .reportTestTable tr:first-child th {
+    border-bottom-color: #777 !important;
+  }
+  .reportPaper.v85-no-vertical .reportTestTable th,
+  .reportPaper.v85-no-vertical .reportTestTable td {
+    border-left-color: transparent !important;
+    border-right-color: transparent !important;
+  }
+}
+</style>
+<script id="v85FinalRepair">
+(function(){
+  'use strict';
+  function ensureConfig(){
+    db.settings = db.settings || {};
+    db.settings.printConfig = db.settings.printConfig || {};
+    var c = db.settings.printConfig;
+    if(c.horizontalLines === undefined) c.horizontalLines = true;
+    if(c.verticalLines === undefined) c.verticalLines = true;
+    if(c.testHeadingColor === undefined) c.testHeadingColor = true;
+    if(c.resultAlign === undefined) c.resultAlign = 'left';
+    return c;
+  }
+  function addControls(){
+    return;
+    var tab=document.getElementById('printTab');
+    if(!tab || document.getElementById('v85FinalControls')) return;
+    var box=document.createElement('div');
+    box.id='v85FinalControls';
+    box.style.cssText='margin-top:12px;padding:10px;border:1px solid #8dbbd8;background:#f7fcff';
+    box.innerHTML=
+      '<h3 style="margin:0 0 7px">Test Parameters Print Controls</h3>'+
+      '<div class="grid4">'+
+      '<label><input id="v85HorizontalLines" type="checkbox" style="width:auto"> Show horizontal lines</label>'+ 
+      '<label><input id="v85VerticalLines" type="checkbox" style="width:auto"> Show vertical lines</label>'+ 
+      '<label><input id="v85HeadingColor" type="checkbox" style="width:auto"> Show light color behind test name</label>'+ 
+      '<label>Results alignment<select id="v85ResultAlign"><option value="left">Left side</option><option value="center">Center</option><option value="right">Right side</option><option value="justify">Justify</option></select></label>'+ 
+      '</div>'+
+      '<div class="notice" style="margin-top:7px">These settings affect only the test parameter tables and result values in Print / PDF.</div>';
+    var saveBtn=tab.querySelector('button.primary');
+    if(saveBtn) tab.insertBefore(box,saveBtn); else tab.appendChild(box);
+    syncControls();
+  }
+  function syncControls(){
+    var c=ensureConfig();
+    var h=document.getElementById('v85HorizontalLines');
+    var v=document.getElementById('v85VerticalLines');
+    var b=document.getElementById('v85HeadingColor');
+    var a=document.getElementById('v85ResultAlign');
+    if(h) h.checked=c.horizontalLines!==false;
+    if(v) v.checked=c.verticalLines!==false;
+    if(b) b.checked=c.testHeadingColor!==false;
+    if(a) a.value=c.resultAlign||'left';
+  }
+  function applyPrintControls(){
+    var paper=document.querySelector('#reportContent .reportPaper');
+    if(!paper) return;
+    var c=ensureConfig();
+    paper.classList.toggle('v85-no-horizontal',c.horizontalLines===false);
+    paper.classList.toggle('v85-no-vertical',c.verticalLines===false);
+    document.querySelectorAll('#reportContent .testHeading').forEach(function(el){
+      el.style.background=c.testHeadingColor===false?'transparent':'#e8f4fa';
+    });
+    document.querySelectorAll('#reportContent .reportTestTable').forEach(function(table){
+      var rows=table.querySelectorAll('tr');
+      rows.forEach(function(row,index){
+        if(index===0) return;
+        var cell=row.children && row.children[1];
+        if(cell){
+          cell.style.textAlign=c.resultAlign||'left';
+          var input=cell.querySelector('input,select,textarea');
+          if(input) input.style.textAlign=c.resultAlign||'left';
+        }
+      });
+    });
+  }
+  var oldSave=window.saveSettings;
+  window.saveSettings=function(){
+    if(oldSave) oldSave.apply(this,arguments);
+    var c=ensureConfig();
+    var h=document.getElementById('v85HorizontalLines');
+    var v=document.getElementById('v85VerticalLines');
+    var b=document.getElementById('v85HeadingColor');
+    var a=document.getElementById('v85ResultAlign');
+    if(h) c.horizontalLines=h.checked;
+    if(v) c.verticalLines=v.checked;
+    if(b) c.testHeadingColor=b.checked;
+    if(a) c.resultAlign=a.value;
+    save();
+    syncControls();
+    applyPrintControls();
+    var msg=document.getElementById('settingsMsg');
+    if(msg) msg.innerHTML='<span class="success">Settings saved successfully.</span>';
+  };
+  var oldOpen=window.openReport;
+  window.openReport=function(id){
+    if(oldOpen) oldOpen.apply(this,arguments);
+    setTimeout(applyPrintControls,30);
+  };
+  var oldRefresh=window.refresh;
+  window.refresh=function(){
+    if(oldRefresh) oldRefresh.apply(this,arguments);
+    addControls(); syncControls(); setTimeout(applyPrintControls,30);
+  };
+  document.addEventListener('DOMContentLoaded',function(){
+    addControls(); syncControls();
+    setTimeout(applyPrintControls,100);
+  });
+  addControls(); syncControls();
+})();
+</script>
+
+<script id="v85RecordsLinkPreserveFinal">
+(function(){
+  'use strict';
+  function escR(v){
+    if(typeof esc==='function') return esc(String(v==null?'':v));
+    return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]});
+  }
+  function dateOnly(v){
+    if(!v) return '';
+    var str=String(v);
+    var m=str.match(/(\d{4})[-\/]?(\d{1,2})[-\/]?(\d{1,2})/);
+    if(m) return m[1]+'-'+String(m[2]).padStart(2,'0')+'-'+String(m[3]).padStart(2,'0');
+    var d=new Date(str); if(!isNaN(d)) return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+    return '';
+  }
+  function sampleOf(p,r){return String((p&& (p.sample||p.labNo||p.mrNo)) || (r&& (r.sample||r.labNo||r.mrNo)) || '');}
+  function patientOf(p,r){return String((p&& (p.name||p.patient)) || (r&& (r.patient||r.name)) || '');}
+  function specimenOf(p,r){return String((p&&p.specimen) || (r&&r.specimen) || 'Taken in Lab');}
+  function testsOf(p,r){
+    var a=(p&&Array.isArray(p.tests)?p.tests:null) || (r&&Array.isArray(r.tests)?r.tests:null) || [];
+    return a.map(function(x){return String(x).replace(/^\s*\[[^\]]+\]\s*/,'').replace(/^\s*\([^)]*\)\s*/,'');}).join(', ');
+  }
+  function buildRows(){
+    db.patients=Array.isArray(db.patients)?db.patients:[];
+    db.reports=Array.isArray(db.reports)?db.reports:[];
+    var out=[], used={};
+    db.patients.forEach(function(p){
+      var ps=sampleOf(p,null), r=db.reports.find(function(x){return sampleOf(null,x)===ps || (p.reportId && String(x.id)===String(p.reportId));});
+      if(r) used[String(r.id)]=true;
+      out.push({p:p,r:r});
+    });
+    db.reports.forEach(function(r){
+      if(used[String(r.id)]) return;
+      var ps=sampleOf(null,r), p=db.patients.find(function(x){return sampleOf(x,null)===ps;});
+      out.push({p:p||{},r:r});
+    });
+    return out;
+  }
+  window.renderRecords=function(){
+    var body=document.getElementById('recordRows'); if(!body) return;
+    var from=(document.getElementById('recordFrom')||{}).value||'';
+    var to=(document.getElementById('recordTo')||{}).value||'';
+    var rows=buildRows().filter(function(o){
+      var d=dateOnly((o.p&&o.p.date)||(o.r&& (o.r.created||o.r.date)));
+      return (!from || (d && d>=from)) && (!to || (d && d<=to));
+    });
+    body.innerHTML=rows.map(function(o){
+      var p=o.p||{}, r=o.r||{}, rid=r.id||'';
+      var d=p.date||r.created||r.date||'';
+      var action=rid ? '<button type="button" onclick="openRecordReport('+JSON.stringify(String(rid))+')">Report Entry</button>' : '<span>Report not created</span>';
+      var del='<button class="danger" type="button" onclick="document.getElementById(\'deleteSample\').value='+JSON.stringify(sampleOf(p,r))+';deleteRecord()">Delete</button>';
+      return '<tr><td>'+escR(d)+'</td><td>'+escR(sampleOf(p,r))+'</td><td>'+escR(patientOf(p,r))+'</td><td>'+escR(specimenOf(p,r))+'</td><td>'+escR(testsOf(p,r))+'</td><td>'+escR(r.status||'Pending')+'</td><td>'+action+' '+del+'</td></tr>';
+    }).join('') || '<tr><td colspan="7">No records found for the selected date range.</td></tr>';
+  };
+  window.searchRecords=function(){window.renderRecords();};
+  window.clearRecordFilters=function(){['recordFrom','recordTo'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});window.renderRecords();};
+  window.openRecordReport=function(reportId){
+    var r=(db.reports||[]).find(function(x){return String(x.id)===String(reportId);});
+    if(!r){alert('Report not found.');return;}
+    if(typeof go==='function') go('reports');
+    setTimeout(function(){
+      if(typeof renderReports==='function') renderReports();
+      if(typeof openReport==='function') openReport(r.id);
+    },120);
+  };
+  var oldRefresh=window.refresh;
+  window.refresh=function(){if(oldRefresh)oldRefresh.apply(this,arguments);setTimeout(window.renderRecords,0);};
+  document.addEventListener('DOMContentLoaded',function(){setTimeout(window.renderRecords,180);});
+  setTimeout(window.renderRecords,180);
+})();
+</script>
+<script id="specimenReferralLogic">(function(){
+function syncReferralVisibility(){
+  var specimen=document.getElementById('rSpecimen'),box=document.getElementById('referralBox');
+  if(!specimen||!box)return;
+  var show=specimen.value==='Brought in Lab';
+  box.classList.toggle('hidden',!show);
+  var saved=(db.settings&&db.settings.lastReferral)||{};
+  var set=function(id,val){var e=document.getElementById(id);if(e)e.value=val||'';};
+  set('refFromLab',saved.fromLab || (db.settings&&db.settings.lab) || 'Mumtaz Lab');
+  set('refFromAddress',saved.fromAddress || (db.settings&&db.settings.address) || '');
+  set('refFromPhone',saved.fromPhone || (db.settings&&db.settings.phone) || '');
+  set('refFromDespatch',saved.despatchBy || (db.settings&&db.settings.despatchBy) || '');
+  set('refToLab',saved.toLab); set('refToAddress',saved.toAddress); set('refToPhone',saved.toPhone);
+}
+window.saveReferralDetails=function(){
+  if(document.getElementById('rSpecimen').value!=='Brought in Lab')return alert('Please select Brought in Lab first.');
+  var value=function(id){var e=document.getElementById(id);return e?e.value.trim():'';};
+  var details={fromLab:value('refFromLab'),fromAddress:value('refFromAddress'),fromPhone:value('refFromPhone'),despatchBy:value('refFromDespatch'),toLab:value('refToLab'),toAddress:value('refToAddress'),toPhone:value('refToPhone')};
+  if(!details.toLab)return alert('Please enter destination lab / hospital name.');
+  db.settings=db.settings||{}; db.settings.lastReferral=details; db.settings.lastReferralTo=details;
+  if(lastReceipt&&lastReceipt.specimen==='Brought in Lab')lastReceipt.referral=details;
+  save();
+  var msg=document.getElementById('referralMsg'); if(msg)msg.innerHTML='<span class="success">Transfer details saved.</span>';
+};
+var oldInit=window.init;window.init=function(){if(oldInit)oldInit.apply(this,arguments);syncReferralVisibility();};
+var oldNew=window.newReceipt;window.newReceipt=function(){if(oldNew)oldNew.apply(this,arguments);syncReferralVisibility();};
+document.addEventListener('change',function(e){if(e.target&&e.target.id==='rSpecimen')syncReferralVisibility();});
+setTimeout(syncReferralVisibility,50);
+})();</script><style id="specimenReferralPrintStyles">.referralPrintBox{display:block;width:100%;box-sizing:border-box;margin:6px 0 8px;border:1px solid #777;padding:6px;clear:both}.referralPrintBox table{width:100%;table-layout:fixed}.referralPrintBox h3{margin:0 0 5px;font-size:11pt}.referralPrintBox table{margin-top:0}.referralPrintBox th,.referralPrintBox td{vertical-align:top}</style>
+<style id="v86SafeRestorationStyles">
+@media print{
+.reportPaper.v86-no-horizontal .reportTestTable th,.reportPaper.v86-no-horizontal .reportTestTable td{border-top-color:transparent!important;border-bottom-color:transparent!important}
+.reportPaper.v86-no-horizontal .reportTestTable tr:first-child th{border-bottom-color:#777!important}
+.reportPaper.v86-no-vertical .reportTestTable th,.reportPaper.v86-no-vertical .reportTestTable td{border-left-color:transparent!important;border-right-color:transparent!important}
+}
+</style>
+<script id="v86SafeRestoration">
+(function(){
+'use strict';
+function cfg(){db.settings=db.settings||{};db.settings.printConfig=db.settings.printConfig||{};var c=db.settings.printConfig;if(c.horizontalLines===undefined)c.horizontalLines=true;if(c.verticalLines===undefined)c.verticalLines=true;if(c.testHeadingColor===undefined)c.testHeadingColor=true;if(c.resultAlign===undefined)c.resultAlign='left';return c;}
+function addDespatch(){var lab=document.getElementById('labTab');if(!lab)return;if(document.getElementById('sDespatchBy')){document.getElementById('sDespatchBy').value=db.settings.despatchBy||'';return;}var labels=lab.querySelectorAll('label');var box=lab.querySelector('.grid4')||lab.querySelector('.grid');if(box){var l=document.createElement('label');l.innerHTML='Despatch By<input id="sDespatchBy" placeholder="Enter despatch person name">';box.appendChild(l);}else{return;}var e=document.getElementById('sDespatchBy');e.value=db.settings.despatchBy||'';}
+function addPrintControls(){return;}
+function syncControls(){var c=cfg();var h=document.getElementById('v86HorizontalLines'),v=document.getElementById('v86VerticalLines'),b=document.getElementById('v86HeadingColor'),a=document.getElementById('v86ResultAlign');if(h)h.checked=c.horizontalLines!==false;if(v)v.checked=c.verticalLines!==false;if(b)b.checked=c.testHeadingColor!==false;if(a)a.value=c.resultAlign||'left';}
+function applyControls(){var paper=document.querySelector('#reportContent .reportPaper');if(!paper)return;var c=cfg();paper.classList.toggle('v86-no-horizontal',c.horizontalLines===false);paper.classList.toggle('v86-no-vertical',c.verticalLines===false);document.querySelectorAll('#reportContent .testHeading').forEach(function(e){e.style.background=c.testHeadingColor===false?'transparent':'#e8f4fa'});document.querySelectorAll('#reportContent .reportTestTable tr').forEach(function(row,i){if(i===0)return;var cell=row.children&&row.children[1];if(cell){cell.style.textAlign=c.resultAlign||'left';var input=cell.querySelector('input,select,textarea');if(input)input.style.textAlign=c.resultAlign||'left';}});}
+var oldSave=window.saveSettings;window.saveSettings=function(){if(oldSave)oldSave.apply(this,arguments);addDespatch();var d=document.getElementById('sDespatchBy');if(d)db.settings.despatchBy=d.value.trim();var c=cfg(),h=document.getElementById('v86HorizontalLines'),v=document.getElementById('v86VerticalLines'),b=document.getElementById('v86HeadingColor'),a=document.getElementById('v86ResultAlign');if(h)c.horizontalLines=h.checked;if(v)c.verticalLines=v.checked;if(b)c.testHeadingColor=b.checked;if(a)c.resultAlign=a.value;save();syncControls();};
+var oldLoad=window.loadSettings;window.loadSettings=function(){if(oldLoad)oldLoad.apply(this,arguments);addDespatch();syncControls();};
+var oldOpen=window.openReport;window.openReport=function(){var r=oldOpen.apply(this,arguments);setTimeout(applyControls,50);return r;};
+var oldPrint=window.printLastReceipt;window.printLastReceipt=function(){if(!lastReceipt)return alert('Save a receipt first.');var p=lastReceipt,c=cfg(),ref=p.referral||db.settings.lastReferralTo||null;var head=(db.settings.showPrintLab!==false?'<h1>'+esc(db.settings.lab||'')+'</h1>':'')+(db.settings.showPrintAddress!==false?'<div style="text-align:center">'+esc(db.settings.bio||'')+' '+esc(db.settings.address||'')+' '+(db.settings.phone?'| '+esc(db.settings.phone):'')+'</div>':'');var patient='<div class="reportPatientBox"><table><tr><td><b>Patient Name:</b><br>'+esc(p.name||'')+'</td><td><b>Relation:</b><br>'+esc(p.relation||'')+'</td><td><b>Relation Name:</b><br>'+esc(p.relationName||'')+'</td><td><b>Age:</b><br>'+esc(p.age||'')+'</td></tr><tr><td><b>Gender:</b><br>'+esc(p.gender||'')+'</td><td><b>Phone:</b><br>'+esc(p.phone||'')+'</td><td><b>MR / Lab No:</b><br>'+esc(p.sample||'')+'</td><td><b>Date / Time:</b><br>'+esc(p.date||'')+'</td></tr><tr><td colspan="2"><b>Address:</b> '+esc(p.address||'')+'</td><td colspan="2"><b>Doctor / Ref. By:</b> '+esc(p.doctor||'')+'</td></tr></table></div>';var rows=(p.tests||[]).map(function(t){return '<tr><td>'+esc(t)+'</td><td>'+money(db.tests.find(function(x){return x.name===t;})?.price||0)+'</td></tr>';}).join('');var transfer=ref?'<h3>Sample Transfer / Referral Details</h3><table><tr><th>From</th><th>To</th></tr><tr><td><b>'+esc(db.settings.lab||'')+'</b><br>Address: '+esc(db.settings.address||'')+'<br>Contact: '+esc(db.settings.phone||'')+'<br>Despatch By: '+esc(db.settings.despatchBy||'')+'</td><td><b>'+esc(ref.toLab||'')+'</b><br>Address: '+esc(ref.toAddress||'')+'<br>Contact: '+esc(ref.toPhone||'')+'</td></tr></table>':'';document.getElementById('reportContent').innerHTML='<div class="reportPaper" style="--print-title:'+(c.title||'22pt')+';--print-heading:'+(c.heading||'15pt')+';--print-body:'+(c.body||'11pt')+';--print-table:'+(c.table||'9pt')+';--page-top:'+(c.pageTop??10)+'mm;--page-bottom:'+(c.pageBottom??5)+'mm;--page-left:'+(c.pageLeft??7)+'mm;--page-right:'+(c.pageRight??7)+'mm">'+head+'<h2>Sample Receipt</h2>'+patient+'<table><tr><th>Test</th><th>Charges</th></tr>'+rows+'</table><p><b>Total:</b> '+money(p.total)+' &nbsp; <b>Paid:</b> '+money(p.paid)+' &nbsp; <b>Due:</b> '+money(p.due)+'</p>'+transfer+'<div class="noPrint"><button onclick="window.print()">Print / PDF</button></div></div>';document.getElementById('reportModal').classList.remove('hidden');};
+document.addEventListener('DOMContentLoaded',function(){setTimeout(function(){addDespatch();addPrintControls();syncControls();},100);});setTimeout(function(){addDespatch();addPrintControls();syncControls();},300);
+})();
+</script>
+<script>(function(){db.tests=Array.isArray(db.tests)?db.tests:[];defaultTests.forEach(function(d){if(!db.tests.some(function(t){return String(t.name||'').toLowerCase()===d.name.toLowerCase();}))db.tests.push(JSON.parse(JSON.stringify(d)));});save();})();</script>
+<script id="v89FinalIntegrityRepair">
+(function(){
+  'use strict';
+  function ensureTests(){
+    if(!Array.isArray(db.tests)) db.tests=[];
+    // Restore missing built-in tests without deleting custom tests or changing saved prices.
+    if(Array.isArray(window.defaultTests)){
+      defaultTests.forEach(function(def){
+        var found=db.tests.find(function(t){return String(t&&t.name||'').toLowerCase()===String(def.name).toLowerCase();});
+        if(!found) db.tests.push(JSON.parse(JSON.stringify(def)));
+      });
+    }
+    db.tests=db.tests.filter(function(t){return t&&t.name;});
+    save();
+  }
+  function refreshReceiptTests(){
+    ensureTests();
+    if(typeof populateTests==='function') populateTests(document.getElementById('rTestSearch')?.value||'');
+  }
+  function syncDespatchAndReferral(){
+    var d=document.getElementById('sDespatchBy');
+    if(d) d.value=db.settings.despatchBy||'';
+    var s=document.getElementById('rSpecimen');
+    if(s && typeof syncReferralVisibility==='function') syncReferralVisibility();
+  }
+  // Preserve all existing refresh behavior, then repair the receipt catalogue and links.
+  var oldRefresh=window.refresh;
+  window.refresh=function(){
+    if(oldRefresh) oldRefresh.apply(this,arguments);
+    refreshReceiptTests();
+    syncDespatchAndReferral();
+  };
+  var oldInit=window.init;
+  window.init=function(){
+    ensureTests();
+    if(oldInit) oldInit.apply(this,arguments);
+    refreshReceiptTests();
+    syncDespatchAndReferral();
+  };
+  // Keep Despatch By when Lab Settings are saved; do not replace any prior settings.
+  var oldSaveSettings=window.saveSettings;
+  window.saveSettings=function(){
+    if(oldSaveSettings) oldSaveSettings.apply(this,arguments);
+    db.settings=db.settings||{};
+    var d=document.getElementById('sDespatchBy');
+    if(d) db.settings.despatchBy=d.value.trim();
+    save();
+    syncDespatchAndReferral();
+  };
+  // Receipt printing: use the existing Print Settings switches, while retaining the receipt layout.
+  window.printLastReceipt=function(){
+    if(!lastReceipt) return alert('Save a receipt first.');
+    var p=lastReceipt, c=db.settings.printConfig||{}, ref=p.referral||db.settings.lastReferralTo||null;
+    var showPatient=c.patient!==false, showDoctor=c.doctor!==false;
+    var head=(db.settings.showPrintLab!==false?'<h1>'+esc(db.settings.lab||'')+'</h1>':'')+
+      (db.settings.showPrintAddress!==false?'<div style="text-align:center">'+esc(db.settings.bio||'')+' '+esc(db.settings.address||'')+' '+(db.settings.phone?'| '+esc(db.settings.phone):'')+'</div>':'');
+    var patient='';
+    if(showPatient){
+      patient='<div class="reportPatientBox"><table><tr>'+ 
+        '<td><b>Patient Name:</b><br>'+esc(p.name||'')+'</td>'+ 
+        '<td><b>Relation:</b><br>'+esc(p.relationType||p.relation||'')+'</td>'+ 
+        '<td><b>Relation Name:</b><br>'+esc(p.relationName||'')+'</td>'+ 
+        '<td><b>Age:</b><br>'+esc(p.age||'')+'</td></tr><tr>'+ 
+        '<td><b>Gender:</b><br>'+esc(p.gender||'')+'</td>'+ 
+        '<td><b>Phone:</b><br>'+esc(p.phone||'')+'</td>'+ 
+        '<td><b>MR / Lab No:</b><br>'+esc(p.sample||'')+'</td>'+ 
+        '<td><b>Date / Time:</b><br>'+esc(p.date||'')+'</td></tr><tr>'+ 
+        '<td colspan="2"><b>Address:</b> '+esc(p.address||'')+'</td>'+ 
+        (showDoctor?'<td colspan="2"><b>Doctor / Ref. By:</b> '+esc(p.doctor||'')+'</td>':'<td colspan="2"></td>')+ 
+        '</tr></table></div>';
+    }
+    var rows=(p.tests||[]).map(function(t){
+      var test=(db.tests||[]).find(function(x){return x.name===t;});
+      return '<tr><td>'+esc(t)+'</td><td style="text-align:'+(c.resultAlign||'left')+'">'+money(test?.price||0)+'</td></tr>';
+    }).join('');
+    var transfer='';
+    // Show transfer details only for Brought in Lab, horizontally below patient details.
+    if(p.specimen==='Brought in Lab' && ref){
+      transfer='<div class="referralPrintBox"><h3>Sample Transfer / Referral Details</h3><table><tr><th style="width:50%">From</th><th style="width:50%">To</th></tr><tr>'+ 
+        '<td><b>'+esc(ref.fromLab||'')+'</b><br>Address: '+esc(ref.fromAddress||'')+'<br>Contact: '+esc(ref.fromPhone||'')+'<br>Despatch By: '+esc(ref.despatchBy||'')+'</td>'+ 
+        '<td><b>'+esc(ref.toLab||'')+'</b><br>Address: '+esc(ref.toAddress||'')+'<br>Contact: '+esc(ref.toPhone||'')+'</td>'+ 
+        '</tr></table></div>';
+    }
+    document.getElementById('reportContent').innerHTML='<div class="reportPaper" style="--print-title:'+(c.title||'22pt')+';--print-heading:'+(c.heading||'15pt')+';--print-body:'+(c.body||'11pt')+';--print-table:'+(c.table||'9pt')+';--page-top:'+(c.pageTop??10)+'mm;--page-bottom:'+(c.pageBottom??5)+'mm;--page-left:'+(c.pageLeft??7)+'mm;--page-right:'+(c.pageRight??7)+'mm">'+head+'<h2>Sample Receipt</h2>'+patient+transfer+'<table><tr><th>Test</th><th>Charges</th></tr>'+rows+'</table><p><b>Total:</b> '+money(p.total)+' &nbsp; <b>Paid:</b> '+money(p.paid)+' &nbsp; <b>Due:</b> '+money(p.due)+'</p><div class="noPrint"><button onclick="window.print()">Print / PDF</button></div></div>';
+    document.getElementById('reportModal').classList.remove('hidden');
+  };
+  ensureTests();
+  document.addEventListener('DOMContentLoaded',function(){setTimeout(function(){refreshReceiptTests();syncDespatchAndReferral();},250);});
+  setTimeout(function(){refreshReceiptTests();syncDespatchAndReferral();},500);
+})();
+</script>
+
+
+<script id="v811-despatch-init-preserve">
+(function(){
+  var oldInit=window.init;
+  window.init=function(){
+    if(oldInit) oldInit.apply(this,arguments);
+    var d=document.getElementById('sDespatchBy');
+    if(d) d.value=(db.settings&&db.settings.despatchBy)||'';
+  };
+})();
+</script>
+<script id="v811-clean-name-fallback">
+(function(){
+  if(typeof window.cleanName!=='function'){
+    window.cleanName=function(name){
+      return String(name||'').replace(/^\s*\[[^\]]+\]\s*/,'');
+    };
+  }
+})();
+</script>
+<script id="final-integrity-repair-v811">
+(function(){
+  'use strict';
+  function ensure(){
+    db.settings=db.settings||{};
+    db.settings.printConfig=db.settings.printConfig||{};
+    var c=db.settings.printConfig;
+    if(c.horizontalLines===undefined)c.horizontalLines=true;
+    if(c.verticalLines===undefined)c.verticalLines=true;
+    if(c.testHeadingColor===undefined)c.testHeadingColor=true;
+    if(c.resultAlign===undefined)c.resultAlign='left';
+    if(!Array.isArray(db.tests))db.tests=[];
+    if(!db.tests.length && Array.isArray(defaultTests)) db.tests=JSON.parse(JSON.stringify(defaultTests));
+    return c;
+  }
+  function renderVisibleTests(query){
+    ensure();
+    var sel=document.getElementById('rTests'),box=document.getElementById('rTestChecks');
+    if(!sel||!box)return;
+    var selected=new Set(Array.from(sel.options).filter(function(o){return o.selected;}).map(function(o){return o.value;}));
+    var q=String(query||'').toLowerCase().trim();
+    var arr=db.tests.filter(function(t){
+      return !q || String(t.name||'').toLowerCase().includes(q) || String(t.category||'').toLowerCase().includes(q) || selected.has(t.name);
+    });
+    sel.innerHTML=arr.map(function(t){return '<option value="'+esc(t.name)+'" '+(selected.has(t.name)?'selected':'')+'>'+esc(t.name)+' - '+money(t.price)+'</option>';}).join('');
+    box.innerHTML=arr.map(function(t){return '<label class="testCheckItem"><input type="checkbox" value="'+esc(t.name)+'" '+(selected.has(t.name)?'checked':'')+' onchange="syncTestChecks()"><span>'+esc(t.name)+' - '+money(t.price)+'</span></label>';}).join('') || '<span>No tests found.</span>';
+    calcReceipt();
+  }
+  window.populateTests=renderVisibleTests;
+  function syncFields(){
+    ensure();
+    var d=document.getElementById('sDespatchBy'); if(d)d.value=db.settings.despatchBy||'';
+    var f=document.getElementById('refFromDespatch'); if(f)f.textContent=db.settings.despatchBy||'';
+    var c=db.settings.printConfig;
+    ['v86HorizontalLines','v86VerticalLines','v86HeadingColor'].forEach(function(id){var e=document.getElementById(id);if(e)e.checked=id==='v86HorizontalLines'?c.horizontalLines!==false:id==='v86VerticalLines'?c.verticalLines!==false:c.testHeadingColor!==false;});
+    var a=document.getElementById('v86ResultAlign');if(a)a.value=c.resultAlign||'left';
+  }
+  function applyReportPrint(){
+    var paper=document.querySelector('#reportContent .reportPaper');if(!paper)return;
+    var c=ensure();
+    var tables=paper.querySelectorAll('table');
+    tables.forEach(function(t){
+      t.style.borderCollapse='collapse';
+      t.querySelectorAll('th,td').forEach(function(cell){
+        cell.style.borderTop=c.horizontalLines===false?'0 solid transparent':'1px solid #777';
+        cell.style.borderBottom=c.horizontalLines===false?'0 solid transparent':'1px solid #777';
+        cell.style.borderLeft=c.verticalLines===false?'0 solid transparent':'1px solid #777';
+        cell.style.borderRight=c.verticalLines===false?'0 solid transparent':'1px solid #777';
+      });
+      t.querySelectorAll('tr').forEach(function(row,i){
+        if(i>0 && row.children[1]){row.children[1].style.textAlign=c.resultAlign||'left';var x=row.children[1].querySelector('input,select,textarea');if(x)x.style.textAlign=c.resultAlign||'left';}
+      });
+    });
+    paper.querySelectorAll('.testHeading').forEach(function(e){e.style.background=c.testHeadingColor===false?'transparent':'#e8f4fa';});
+  }
+  var oldSave=window.saveSettings;
+  window.saveSettings=function(){
+    if(oldSave)oldSave.apply(this,arguments);
+    ensure();
+    var d=document.getElementById('sDespatchBy');if(d)db.settings.despatchBy=d.value.trim();
+    var c=db.settings.printConfig;
+    var h=document.getElementById('v86HorizontalLines'),v=document.getElementById('v86VerticalLines'),b=document.getElementById('v86HeadingColor'),a=document.getElementById('v86ResultAlign');
+    if(h)c.horizontalLines=h.checked;if(v)c.verticalLines=v.checked;if(b)c.testHeadingColor=b.checked;if(a)c.resultAlign=a.value;
+    save();syncFields();
+  };
+  var oldInit=window.init;
+  window.init=function(){ensure();if(oldInit)oldInit.apply(this,arguments);renderVisibleTests(document.getElementById('rTestSearch')?.value||'');syncFields();};
+  var oldRefresh=window.refresh;
+  window.refresh=function(){if(oldRefresh)oldRefresh.apply(this,arguments);renderVisibleTests(document.getElementById('rTestSearch')?.value||'');syncFields();};
+  var oldOpen=window.openReport;
+  window.openReport=function(id){var r=oldOpen&&oldOpen.apply(this,arguments);setTimeout(applyReportPrint,80);return r;};
+  var spec=document.getElementById('rSpecimen');
+  if(spec)spec.addEventListener('change',function(){var f=document.getElementById('refFromDespatch');if(f)f.textContent=db.settings.despatchBy||'';});
+  var from=document.querySelector('#refFromPhone');
+  if(from && !document.getElementById('refFromDespatch')){var p=from.parentElement;var q=document.createElement('p');q.innerHTML='Despatch By: <span id="refFromDespatch"></span>';p.parentElement.appendChild(q);}
+  setTimeout(function(){ensure();renderVisibleTests('');syncFields();},120);
+})();
+</script>
+
+<script id="v812-login-state-fix">
+(function(){
+  function ensureLoginState(){
+    try{
+      if(typeof db==='undefined') return;
+      if(db.settings && db.settings.loginRequired===false){
+        current={name:'admin',role:'Admin',permissions:['all']};
+        var screen=document.getElementById('loginScreen');
+        if(screen) screen.classList.add('hidden');
+        var status=document.getElementById('loginStatus');
+        if(status) status.childNodes[0].textContent='Logged in: admin (Admin) ';
+        var logout=document.getElementById('topLogout');
+        if(logout) logout.classList.remove('hidden');
+        if(typeof init==='function') init();
+        if(typeof syncSettingFields==='function') syncSettingFields();
+        if(typeof refresh==='function') refresh();
+      }
+    }catch(err){ console.error('Login state initialization error:',err); }
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',function(){setTimeout(ensureLoginState,180);});
+  else setTimeout(ensureLoginState,180);
+})();
+</script>
+
+<script id="final-report-number-specimen-fix">
+(function(){
+  function reportDisplayNo(r){
+    if(r && r.reportNo) return String(r.reportNo).padStart(2,'0');
+    var list=Array.isArray(db.reports)?db.reports:[];
+    var i=list.findIndex(function(x){return x===r || (x&&r&&x.id===r.id);});
+    return String(i>=0 ? (list.length-i) : 1).padStart(2,'0');
+  }
+  var oldOpenFinal=window.openReport;
+  window.openReport=function(id){
+    var result=oldOpenFinal&&oldOpenFinal.apply(this,arguments);
+    setTimeout(function(){
+      try{
+        var r=(db.reports||[]).find(function(x){return x.id===id;});
+        var p=r&&(db.patients||[]).find(function(x){return x.sample===r.sample;});
+        var paper=document.querySelector('#reportContent .reportPaper');
+        if(!paper||!p)return;
+        paper.innerHTML=paper.innerHTML.replace(/(<b>Report No:<\/b>\s*)([^<]+)/, '$1'+reportDisplayNo(r));
+        if(!paper.querySelector('.specimenPrintLine')){
+          var box=paper.querySelector('.reportPatientBox');
+          var line=document.createElement('p');
+          line.className='specimenPrintLine';
+          line.innerHTML='<b>Specimen:</b> '+(window.esc?esc(p.specimen||r.specimen||'Taken in Lab'):(p.specimen||r.specimen||'Taken in Lab'));
+          if(box) box.insertAdjacentElement('afterend',line); else paper.querySelector('h2')?.insertAdjacentElement('afterend',line);
+        }
+      }catch(e){console.error('Report display fix:',e);}
+    },120);
+    return result;
+  };
+})();
+</script>
+
+<style id="v812-final-report-visual-fix">
+/* Final report appearance: light test-heading color + dotted parameter separators. */
+@media print {
+  .reportPaper .testHeading {
+    background: #e8f4fa !important;
+    color: #111 !important;
+    border: 1px solid #777 !important;
+    padding: 4px 6px !important;
+    margin: 5px 0 0 !important;
+  }
+  .reportPaper.noTestBg .testHeading {
+    background: transparent !important;
+  }
+  .reportPaper .reportTestTable {
+    border-collapse: collapse !important;
+    margin: 0 0 10px !important;
+  }
+  .reportPaper .reportTestTable th,
+  .reportPaper .reportTestTable td {
+    border-top: 0 !important;
+    border-bottom: 1px dotted #777 !important;
+  }
+  .reportPaper .reportTestTable tr:first-child th {
+    border-top: 1px solid #777 !important;
+    border-bottom: 1px solid #777 !important;
+  }
+  .reportPaper.noHorizontalDotted .reportTestTable th,
+  .reportPaper.noHorizontalDotted .reportTestTable td {
+    border-top-color: transparent !important;
+    border-bottom-color: transparent !important;
+  }
+  .reportPaper.noHorizontalDotted .reportTestTable tr:first-child th {
+    border-bottom-color: #777 !important;
+  }
+  .reportPaper.noVerticalLines .reportTestTable th,
+  .reportPaper.noVerticalLines .reportTestTable td {
+    border-left-color: transparent !important;
+    border-right-color: transparent !important;
+  }
+}
+.removeTestBtn{float:right!important;margin:-1px 0 0 8px!important;}
+</style>
+<script id="v812-final-report-visual-fix-script">
+(function(){
+  'use strict';
+  function getCfg(){
+    db.settings=db.settings||{};
+    db.settings.printConfig=db.settings.printConfig||{};
+    var c=db.settings.printConfig;
+    if(c.horizontalLines===undefined)c.horizontalLines=true;
+    if(c.verticalLines===undefined)c.verticalLines=true;
+    if(c.testHeadingColor===undefined)c.testHeadingColor=true;
+    if(c.resultAlign===undefined)c.resultAlign='left';
+    return c;
+  }
+  function displayNo(r){
+    if(r && r.reportNo) return String(r.reportNo).padStart(2,'0');
+    var list=Array.isArray(db.reports)?db.reports:[];
+    var i=list.findIndex(function(x){return x===r || (x&&r&&x.id===r.id);});
+    return String(i>=0 ? (list.length-i) : 1).padStart(2,'0');
+  }
+  function patientBlock(p,cfg,r){
+    if(cfg.patient===false)return '';
+    var relType=p.relationType||'', relName=p.relationName||'';
+    if(!relType && p.relation){
+      var m=String(p.relation).match(/^(S\/O|D\/O|W\/O|H\/O|Self|Guardian)\s*(.*)$/i);
+      if(m){relType=m[1];relName=m[2]||'';}else relType=p.relation;
+    }
+    return '<div class="reportPatientBox"><div class="patientGrid">'+
+      '<div><b>Patient Name:</b> '+esc(p.name||'')+'</div>'+ 
+      '<div><b>Relation:</b> '+esc(relType)+'</div>'+ 
+      '<div><b>Relation Name:</b> '+esc(relName)+'</div>'+ 
+      '<div><b>Age:</b> '+esc(p.age||'')+'</div>'+ 
+      '<div><b>Gender:</b> '+esc(p.gender||'')+'</div>'+ 
+      '<div><b>Phone:</b> '+esc(p.phone||'')+'</div>'+ 
+      (cfg.doctor!==false?'<div><b>Doctor / Ref. By:</b> '+esc(p.doctor||'')+'</div>':'')+
+      '<div><b>Specimen:</b> '+esc(p.specimen||r.specimen||'Taken in Lab')+'</div>'+ 
+      '</div>'+(p.address?'<div class="patientAddress"><b>Address:</b> '+esc(p.address)+'</div>':'')+'</div>';
+  }
+  function renderReport(id){
+    var r=(db.reports||[]).find(function(x){return String(x.id)===String(id);});
+    var p=r&&(db.patients||[]).find(function(x){return x.sample===r.sample;});
+    if(!r||!p)return;
+    var c=getCfg(), sections=[];
+    (r.tests||[]).forEach(function(tn,testIndex){
+      var t=(db.tests||[]).find(function(x){return x.name===tn;});
+      var params=t&&Array.isArray(t.params)&&t.params.length?t.params:[['Result','-','See report','See report']];
+      var rows=params.map(function(x,i){
+        var key=tn+'__'+i, ref=p.gender==='Female'?x[3]:x[2];
+        return '<tr class="parameterRow"><td>'+esc(x[0]||'')+'</td><td><input id="res_'+safe(key)+'" value="'+esc((r.values&&r.values[key])||'')+'"></td><td>'+esc(ref||'')+'</td><td>'+esc(x[1]||'')+'</td></tr><tr class="dotSeparatorRow" aria-hidden="true"><td colspan="4"><span>................................................................................................................................................................</span></td></tr>';
+      }).join('');
+      sections.push('<div class="testSection"><div class="testHeading">'+esc(tn)+'<button type="button" class="noPrint removeTestBtn" onclick="removeTestFromReport(\''+esc(r.id)+'\','+testIndex+')" style="float:right;padding:2px 7px;font-size:11px;background:#f5c1c1;color:#8c1010;border:1px solid #a33;">Remove Test</button></div><table class="reportTestTable"><tr><th>Test / Parameter</th><th>Result</th><th>Reference Range</th><th>Unit</th></tr>'+rows+'</table></div>');
+    });
+    var head=(db.settings.showPrintLab!==false?'<h1>'+esc(db.settings.lab||'')+'</h1>':'')+
+      (db.settings.showPrintAddress!==false?'<div style="text-align:center">'+esc(db.settings.bio||'')+' '+esc(db.settings.address||'')+' '+(db.settings.phone?'| '+esc(db.settings.phone):'')+'</div>':'');
+    var comments=c.comments!==false?'<p><b>Comments:</b> Results should be interpreted by the referring doctor along with clinical findings.</p>':'';
+    var sign=c.sign!==false?'<br><p><b>Authorized Signatory:</b> '+esc(db.settings.sign||'')+'</p>':'';
+    var classes='reportPaper';
+    if(c.testHeadingColor===false)classes+=' noTestBg';
+    if(c.horizontalLines===false)classes+=' noHorizontalDotted';
+    if(c.verticalLines===false)classes+=' noVerticalLines';
+    var html='<div class="'+classes+'" style="--print-title:'+(c.title||'22pt')+';--print-heading:'+(c.heading||'15pt')+';--print-body:'+(c.body||'11pt')+';--print-table:'+(c.table||'9pt')+';--page-top:'+(c.pageTop??10)+'mm;--page-bottom:'+(c.pageBottom??5)+'mm;--page-left:'+(c.pageLeft??7)+'mm;--page-right:'+(c.pageRight??7)+'mm">'+
+      head+'<p><b>Report No:</b> '+displayNo(r)+' &nbsp; <b>MR / Lab No:</b> '+esc(r.sample||'')+' &nbsp; <b>Date:</b> '+esc(r.created||'')+'</p>'+patientBlock(p,c,r)+sections.join('')+comments+sign+
+      '<div class="noPrint actions"><button class="primary" onclick="saveReport(\''+esc(r.id)+'\')">Save Results</button><button onclick="window.print()">Print / PDF</button></div></div>';
+    document.getElementById('reportContent').innerHTML=html;
+    document.getElementById('reportModal').classList.remove('hidden');
+    applyVisuals();
+  }
+  function applyVisuals(){
+    var paper=document.querySelector('#reportContent .reportPaper'); if(!paper)return;
+    var c=getCfg();
+    paper.classList.toggle('noTestBg',c.testHeadingColor===false);
+    paper.classList.toggle('noHorizontalDotted',c.horizontalLines===false);
+    paper.classList.toggle('noVerticalLines',c.verticalLines===false);
+    paper.querySelectorAll('.testHeading').forEach(function(e){e.style.background=c.testHeadingColor===false?'transparent':'#e8f4fa';});
+    paper.querySelectorAll('.reportTestTable tr').forEach(function(row,i){
+      if(i===0)return;
+      var cell=row.children&&row.children[1];
+      if(cell){cell.style.textAlign=c.resultAlign||'left';var input=cell.querySelector('input,select,textarea');if(input)input.style.textAlign=c.resultAlign||'left';}
+    });
+  }
+  window.removeTestFromReport=function(id,testIndex){
+    var r=(db.reports||[]).find(function(x){return String(x.id)===String(id);});
+    if(!r||!Array.isArray(r.tests))return;
+    if(r.tests.length<=1){alert('At least one test must remain in this report.');return;}
+    var testName=r.tests[testIndex];
+    if(!confirm('Remove this test from the report?\n\n'+testName))return;
+    r.tests.splice(testIndex,1);
+    var p=(db.patients||[]).find(function(x){return x.sample===r.sample;});
+    if(p&&Array.isArray(p.tests)){
+      var pi=p.tests.indexOf(testName);
+      if(pi>=0)p.tests.splice(pi,1);
+    }
+    save();
+    renderReports();
+    renderReport(id);
+  };
+  window.openReport=renderReport;
+  window.applyReportVisualFix=applyVisuals;
+})();
+</script>
+
+<style id="v812-dotted-lines-hard-fix">
+/* Strong print rule: visible dotted separators under every parameter row. */
+@media print {
+  .reportPaper .reportTestTable {
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+  }
+  .reportPaper .reportTestTable tbody tr:not(:first-child) td,
+  .reportPaper .reportTestTable > tr:not(:first-child) td {
+    border-top: 0 !important;
+    border-bottom: 1.5px dotted #555 !important;
+    border-bottom-style: dotted !important;
+  }
+  .reportPaper .reportTestTable tr:first-child th {
+    border-bottom: 1px solid #777 !important;
+  }
+  .reportPaper.noHorizontalDotted .reportTestTable tr:not(:first-child) td {
+    border-bottom-color: transparent !important;
+    border-bottom-style: solid !important;
+  }
+}
+</style>
+
+<style id="v812-android-print-final-fix">
+/* Android Chrome / Save as PDF: preserve heading fill and draw reliable row separators. */
+@media print {
+  .reportPaper {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .reportPaper .testHeading {
+    display: block !important;
+    background-color: #e8f4fa !important;
+    background: #e8f4fa !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .reportPaper.noTestBg .testHeading { background: transparent !important; }
+
+  .reportPaper .reportTestTable {
+    width: 100% !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+  }
+  .reportPaper .reportTestTable tr:not(:first-child) > td {
+    border-bottom: 1px dotted #555 !important;
+    border-bottom-style: dotted !important;
+    border-bottom-width: 1px !important;
+    padding-bottom: 2px !important;
+  }
+  .reportPaper .reportTestTable tr:first-child > th {
+    border-bottom: 1px solid #777 !important;
+  }
+  .reportPaper.noHorizontalDotted .reportTestTable tr:not(:first-child) > td {
+    border-bottom-color: transparent !important;
+  }
+}
+</style>
+<script id="v812-android-print-final-fix-script">
+(function(){
+  function forcePrintVisuals(){
+    try{
+      var paper=document.querySelector('#reportContent .reportPaper');
+      if(!paper || !window.db) return;
+      db.settings=db.settings||{};
+      db.settings.printConfig=db.settings.printConfig||{};
+      var c=db.settings.printConfig;
+      paper.classList.toggle('noTestBg', c.testHeadingColor===false);
+      paper.classList.toggle('noHorizontalDotted', c.horizontalLines===false);
+      paper.querySelectorAll('.testHeading').forEach(function(el){
+        el.style.setProperty('background-color', c.testHeadingColor===false?'transparent':'#e8f4fa','important');
+        el.style.setProperty('-webkit-print-color-adjust','exact','important');
+        el.style.setProperty('print-color-adjust','exact','important');
+      });
+      paper.querySelectorAll('.reportTestTable tr').forEach(function(row,i){
+        if(i===0) return;
+        row.querySelectorAll('td').forEach(function(td){
+          td.style.setProperty('border-bottom', c.horizontalLines===false?'1px solid transparent':'1px dotted #555','important');
+          td.style.setProperty('border-bottom-style', c.horizontalLines===false?'solid':'dotted','important');
+          td.style.setProperty('border-bottom-width','1px','important');
+        });
+      });
+    }catch(e){console.log(e)}
+  }
+  document.addEventListener('DOMContentLoaded',function(){setTimeout(forcePrintVisuals,250);});
+  window.addEventListener('beforeprint',forcePrintVisuals);
+  setTimeout(forcePrintVisuals,500);
+})();
+</script>
+
+<style id="mumtaz-deep-final-print-fix">
+/* Deep final print fix: explicit separator rows are used because Android Chrome can ignore dotted borders on table cells. */
+@media print {
+  .reportPaper .reportTestTable {
+    border-collapse: collapse !important;
+    border-spacing: 0 !important;
+    border-left: 0 !important;
+    border-right: 0 !important;
+  }
+  .reportPaper .reportTestTable th,
+  .reportPaper .reportTestTable td {
+    border-left: 0 !important;
+    border-right: 0 !important;
+    border-top: 0 !important;
+  }
+  .reportPaper .reportTestTable .parameterRow > td {
+    border-bottom: 0 !important;
+  }
+  .reportPaper .reportTestTable .dotSeparatorRow > td {
+    height: 4px !important;
+    padding: 0 !important;
+    border: 0 !important;
+    line-height: 0 !important;
+  }
+  .reportPaper .reportTestTable .dotSeparatorRow > td > span {
+    display: block !important;
+    width: 100% !important;
+    height: 0 !important;
+    border-top: 1px dotted #555 !important;
+    background-image: repeating-linear-gradient(to right, #555 0, #555 2px, transparent 2px, transparent 4px) !important;
+    background-size: 100% 1px !important;
+    background-repeat: no-repeat !important;
+    margin: 0 !important;
+  }
+  .reportPaper.noHorizontalDotted .reportTestTable .dotSeparatorRow {
+    display: none !important;
+  }
+  .reportPaper .reportTestTable tr:first-child th {
+    border-bottom: 1px solid #777 !important;
+  }
+  .reportPaper .testHeading {
+    background-color: #e8f4fa !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .reportPaper.noTestBg .testHeading { background: transparent !important; }
+}
+</style>
+
+<style id="actual-dot-character-print-fix">
+/* Final correction: literal dot characters, not CSS borders/gradients. */
+.reportPaper .reportTestTable { border-collapse: collapse !important; }
+.reportPaper .reportTestTable th,
+.reportPaper .reportTestTable td {
+  border-left: 0 !important;
+  border-right: 0 !important;
+}
+.reportPaper .reportTestTable .dotSeparatorRow > td {
+  border: 0 !important;
+  padding: 0 !important;
+  height: 5px !important;
+  line-height: 5px !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+}
+.reportPaper .reportTestTable .dotSeparatorRow > td > span {
+  display: block !important;
+  color: #666 !important;
+  font-family: Arial, sans-serif !important;
+  font-size: 6px !important;
+  font-weight: 400 !important;
+  letter-spacing: 1px !important;
+  line-height: 5px !important;
+  height: 5px !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+}
+@media print {
+  .reportPaper .reportTestTable th,
+  .reportPaper .reportTestTable td {
+    border-left: 0 !important;
+    border-right: 0 !important;
+  }
+  .reportPaper .reportTestTable .parameterRow > td { border-bottom: 0 !important; }
+  .reportPaper .reportTestTable .dotSeparatorRow { display: table-row !important; visibility: visible !important; }
+  .reportPaper .reportTestTable .dotSeparatorRow > td {
+    display: table-cell !important;
+    border: 0 !important;
+    height: 5px !important;
+    padding: 0 !important;
+  }
+  .reportPaper .reportTestTable .dotSeparatorRow > td > span {
+    display: block !important;
+    color: #555 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .reportPaper.noHorizontalDotted .reportTestTable .dotSeparatorRow { display: none !important; }
+}
+</style>
+
+<style id="FINAL-DOT-ONLY-PATCH">
+/* FINAL: no vertical borders; visible literal dot separators under each parameter */
+.reportPaper .reportTestTable,
+.reportPaper .reportTestTable tr,
+.reportPaper .reportTestTable th,
+.reportPaper .reportTestTable td { border-left:0 !important; border-right:0 !important; }
+.reportPaper .reportTestTable .parameterRow > td { border-bottom:0 !important; }
+.reportPaper .reportTestTable .dotSeparatorRow { display:table-row !important; visibility:visible !important; }
+.reportPaper .reportTestTable .dotSeparatorRow > td {
+  display:table-cell !important; border:0 !important; padding:0 2px !important;
+  height:8px !important; line-height:8px !important; overflow:visible !important;
+  white-space:nowrap !important;
+}
+.reportPaper .reportTestTable .dotSeparatorRow > td > span {
+  display:block !important; width:100% !important; height:8px !important;
+  overflow:hidden !important; white-space:nowrap !important;
+  color:#555 !important; background:none !important;
+  font-family:Arial,sans-serif !important; font-size:7px !important;
+  font-weight:400 !important; letter-spacing:1.4px !important;
+  line-height:8px !important; text-align:left !important;
+  border:0 !important;
+}
+@media print {
+  .reportPaper .reportTestTable,
+  .reportPaper .reportTestTable tr,
+  .reportPaper .reportTestTable th,
+  .reportPaper .reportTestTable td { border-left:0 !important; border-right:0 !important; }
+  .reportPaper .reportTestTable .parameterRow > td { border-bottom:0 !important; }
+  .reportPaper .reportTestTable .dotSeparatorRow { display:table-row !important; visibility:visible !important; }
+  .reportPaper .reportTestTable .dotSeparatorRow > td { border:0 !important; height:8px !important; }
+  .reportPaper .reportTestTable .dotSeparatorRow > td > span {
+    display:block !important; color:#444 !important; font-size:7px !important;
+    height:8px !important; line-height:8px !important;
+    -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important;
+  }
+  .reportPaper .testHeading {
+    background:#e8f4fa !important; background-color:#e8f4fa !important;
+    -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important;
+  }
+}
+</style>
+<script id="FINAL-DOT-ONLY-SCRIPT">
+(function(){
+  function finalDotOnly(){
+    var paper=document.querySelector('#reportContent .reportPaper');
+    if(!paper)return;
+    paper.classList.remove('noVerticalLines');
+    paper.querySelectorAll('.reportTestTable, .reportTestTable tr, .reportTestTable th, .reportTestTable td').forEach(function(el){
+      el.style.setProperty('border-left','0','important');
+      el.style.setProperty('border-right','0','important');
+    });
+    paper.querySelectorAll('.reportTestTable .parameterRow > td').forEach(function(td){td.style.setProperty('border-bottom','0','important');});
+    paper.querySelectorAll('.dotSeparatorRow').forEach(function(row){
+      row.style.setProperty('display','table-row','important');
+      row.style.setProperty('visibility','visible','important');
+      var td=row.querySelector('td'), sp=row.querySelector('span');
+      if(td){td.style.setProperty('border','0','important');td.style.setProperty('height','8px','important');}
+      if(sp){sp.style.setProperty('display','block','important');sp.style.setProperty('height','8px','important');sp.style.setProperty('line-height','8px','important');sp.style.setProperty('font-size','7px','important');sp.style.setProperty('letter-spacing','1.4px','important');sp.style.setProperty('color','#444','important');}
+    });
+  }
+  window.addEventListener('beforeprint',finalDotOnly);
+  document.addEventListener('DOMContentLoaded',function(){setTimeout(finalDotOnly,300);});
+  setTimeout(finalDotOnly,800);
+})();
+</script>
+
+<script id="v813-manual-despatch-from-to-persistence">
+(function(){
+  'use strict';
+  function ensureStore(){
+    db.settings=db.settings||{};
+    db.settings.lastReferralFrom=db.settings.lastReferralFrom||{fromLab:db.settings.lab||'',fromAddress:db.settings.address||'',fromPhone:db.settings.phone||'',despatchBy:db.settings.despatchBy||''};
+    db.settings.lastReferralTo=db.settings.lastReferralTo||{toLab:'',toAddress:'',toPhone:''};
+  }
+  function syncManualFields(){
+    ensureStore();
+    var ids=['refFromLab','refFromAddress','refFromPhone','refFromDespatch','refToLab','refToAddress','refToPhone'];
+    var vals={
+      refFromLab:db.settings.lastReferralFrom.fromLab||'',
+      refFromAddress:db.settings.lastReferralFrom.fromAddress||'',
+      refFromPhone:db.settings.lastReferralFrom.fromPhone||'',
+      refFromDespatch:db.settings.lastReferralFrom.despatchBy||db.settings.despatchBy||'',
+      refToLab:db.settings.lastReferralTo.toLab||'',
+      refToAddress:db.settings.lastReferralTo.toAddress||'',
+      refToPhone:db.settings.lastReferralTo.toPhone||''
+    };
+    ids.forEach(function(id){var e=document.getElementById(id);if(e && document.activeElement!==e)e.value=vals[id];});
+  }
+  window.saveReferralDetails=function(){
+    ensureStore();
+    var get=function(id){var e=document.getElementById(id);return e?e.value.trim():'';};
+    var from={fromLab:get('refFromLab'),fromAddress:get('refFromAddress'),fromPhone:get('refFromPhone'),despatchBy:get('refFromDespatch')};
+    var to={toLab:get('refToLab'),toAddress:get('refToAddress'),toPhone:get('refToPhone')};
+    if(!to.toLab)return alert('Enter destination lab / hospital name.');
+    db.settings.lastReferralFrom=from; db.settings.lastReferralTo=to;
+    db.settings.despatchBy=from.despatchBy;
+    window._referralDraft=Object.assign({},from,to);
+    save();
+    var m=document.getElementById('referralMsg');if(m)m.innerHTML='<span class="success">From / To / Despatch By details saved for this receipt.</span>';
+  };
+  var oldSaveSettings=window.saveSettings;
+  window.saveSettings=function(){
+    if(oldSaveSettings)oldSaveSettings.apply(this,arguments);
+    ensureStore();
+    var d=document.getElementById('sDespatchBy');
+    if(d){db.settings.despatchBy=d.value.trim();db.settings.lastReferralFrom.despatchBy=d.value.trim();}
+    save(); syncManualFields();
+  };
+  var oldInit=window.init;
+  window.init=function(){if(oldInit)oldInit.apply(this,arguments);setTimeout(syncManualFields,30);};
+  var oldRefresh=window.refresh;
+  window.refresh=function(){if(oldRefresh)oldRefresh.apply(this,arguments);setTimeout(syncManualFields,30);};
+  document.addEventListener('DOMContentLoaded',function(){ensureStore();syncManualFields();});
+  setTimeout(function(){ensureStore();syncManualFields();},250);
+})();
+</script>
+
+<script id="mumtazSupabasePrintSync">
+/*
+  Mumtaz Lab V8.14 - Supabase Print/Settings Sync
+  IMPORTANT: Put ONLY the Supabase PUBLISHABLE key below.
+  Never put the Supabase Secret key here.
+*/
+(function(){
+  'use strict';
+
+  const MUMTAZ_SUPABASE_URL = 'https://ahliwknjteiveorkuaty.supabase.co';
+  const MUMTAZ_SUPABASE_KEY = 'sb_publishable_UKQ2NSmj5pPY-VKVrqUktg_Mr16ZfFZ';
+  const MUMTAZ_SETTINGS_TABLE = 'Print%20Setting';
+  const MUMTAZ_SETTINGS_ID = '1';
+
+  function cloudHeaders(){
+    return {
+      'apikey': MUMTAZ_SUPABASE_KEY,
+      'Authorization': 'Bearer ' + MUMTAZ_SUPABASE_KEY,
+      'Content-Type': 'application/json',
+      'Prefer': 'return=minimal'
+    };
+  }
+
+  function configured(){
+    return MUMTAZ_SUPABASE_KEY &&
+           MUMTAZ_SUPABASE_KEY !== 'PASTE_YOUR_PUBLISHABLE_KEY_HERE';
+  }
+
+  async function cloudGetSettings(){
+    if(!configured()) return null;
+    const url = MUMTAZ_SUPABASE_URL + '/rest/v1/' +
+      MUMTAZ_SETTINGS_TABLE + '?id=eq.' + encodeURIComponent(MUMTAZ_SETTINGS_ID) +
+      '&select=id,Setting';
+    const res = await fetch(url, {headers: cloudHeaders()});
+    if(!res.ok) throw new Error('Supabase read failed: HTTP ' + res.status);
+    const rows = await res.json();
+    return rows && rows[0] ? (rows[0].Setting || {}) : null;
+  }
+
+  async function cloudSaveSettings(settings){
+    if(!configured()) return false;
+    const url = MUMTAZ_SUPABASE_URL + '/rest/v1/' +
+      MUMTAZ_SETTINGS_TABLE + '?id=eq.' + encodeURIComponent(MUMTAZ_SETTINGS_ID);
+    const res = await fetch(url, {
+      method:'PATCH',
+      headers:cloudHeaders(),
+      body:JSON.stringify({Setting:settings})
+    });
+    if(!res.ok) throw new Error('Supabase save failed: HTTP ' + res.status);
+    return true;
+  }
+
+  function applyCloudSettings(s){
+    if(!s || typeof s!=='object' || !window.db) return;
+    db.settings = Object.assign({}, db.settings || {}, s);
+    if(s.printConfig){
+      db.settings.printConfig = Object.assign({}, db.settings.printConfig || {}, s.printConfig);
+    }
+    if(s.appearance){
+      db.settings.appearance = Object.assign({}, db.settings.appearance || {}, s.appearance);
+    }
+    if(typeof save==='function') save();
+    if(typeof loadSettings==='function') {
+      try { loadSettings(); } catch(e){}
+    }
+    if(typeof syncControls==='function') {
+      try { syncControls(); } catch(e){}
+    }
+    if(typeof applyBrand==='function') {
+      try { applyBrand(); } catch(e){}
+    }
+  }
+
+  async function initialCloudSync(){
+    if(!configured()) return;
+    try{
+      const cloud = await cloudGetSettings();
+
+      /* The new Supabase row currently contains {}.
+         In that case, keep the existing V8.14 local settings and upload them.
+         Once cloud settings exist, cloud settings become the source for settings. */
+      if(cloud && Object.keys(cloud).length){
+        applyCloudSettings(cloud);
+      }else if(typeof db!=='undefined' && db.settings){
+        await cloudSaveSettings(db.settings);
+      }
+
+      console.log('Mumtaz Lab: Supabase settings sync ready.');
+    }catch(err){
+      console.warn('Mumtaz Lab: Supabase settings sync unavailable.', err);
+    }
+  }
+
+  /* Keep the existing V8.14 saveSettings behavior, then copy settings to cloud. */
+  const previousSaveSettings = window.saveSettings;
+  window.saveSettings = async function(){
+    let result;
+    if(previousSaveSettings) result = previousSaveSettings.apply(this, arguments);
+
+    try{
+      if(configured() && typeof db!=='undefined' && db.settings){
+        await cloudSaveSettings(db.settings);
+        const msg=document.getElementById('settingsMsg');
+        if(msg) msg.innerHTML='<span class="success">Settings saved locally and online.</span>';
+      }
+    }catch(err){
+      console.warn(err);
+      const msg=document.getElementById('settingsMsg');
+      if(msg) msg.innerHTML='<span class="error">Local settings saved, but online sync failed.</span>';
+    }
+    return result;
+  };
+
+  /* Expose a manual test function without changing the existing UI. */
+  window.mumtazCloudSync = initialCloudSync;
+
+  /* Wait until the existing V8.14 code has created db/save(). */
+  function start(){
+    if(typeof db!=='undefined' && typeof save==='function') initialCloudSync();
+    else setTimeout(start,500);
+  }
+  start();
+})();
+</script>
+
+
+<style id="mumtazTotalDLCStyles">
+  .mumtaz-total-dlc{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin:8px 0 12px;
+    padding:7px 10px;
+    border:1px solid #7da8c3;
+    background:#f7fcff;
+    font-weight:700;
+  }
+  .mumtaz-total-dlc label{
+    margin:0;
+    color:#075d91;
+    font-size:14px;
+    white-space:nowrap;
+  }
+  .mumtaz-total-dlc input{
+    width:150px;
+    max-width:180px;
+    font-weight:800;
+    color:#075d91;
+    text-align:center;
+    background:#fff;
+  }
+  @media print{
+    /* Total DLC is for Report Entry only. Never print it. */
+    .mumtaz-total-dlc{
+      display:none !important;
+    }
+  }
+</style>
+
+<script id="mumtazTotalDLCLogic">
+(function(){
+  'use strict';
+
+  var DLC_NAMES = [
+    'neutrophils',
+    'lymphocytes',
+    'monocytes',
+    'eosinophils',
+    'basophils',
+    'band cells',
+    'band cell',
+    'stab cells',
+    'stab cell'
+  ];
+
+  function isDlcName(name){
+    name = String(name || '').trim().toLowerCase();
+    return DLC_NAMES.indexOf(name) !== -1;
+  }
+
+  function numberValue(v){
+    var n = parseFloat(String(v || '').replace(/,/g,'').replace('%','').trim());
+    return Number.isFinite(n) ? n : 0;
+  }
+
+  function findDlcRows(paper){
+    var rows = Array.from(paper.querySelectorAll('table tr'));
+    return rows.filter(function(row){
+      var cells = row.querySelectorAll('td');
+      if(!cells.length) return false;
+      var name = (cells[0].textContent || '').trim();
+      return isDlcName(name);
+    });
+  }
+
+  function calculateTotal(box){
+    var paper = box.closest('.reportPaper');
+    if(!paper) return;
+
+    var total = 0;
+    findDlcRows(paper).forEach(function(row){
+      var input = row.querySelector('input, select, textarea');
+      if(input) total += numberValue(input.value);
+    });
+
+    var output = box.querySelector('.mumtaz-total-dlc-value');
+    if(output) output.value = String(total);
+  }
+
+  function addOrUpdateTotalDLC(){
+    var paper = document.querySelector('#reportContent .reportPaper');
+    if(!paper) return;
+
+    var rows = findDlcRows(paper);
+    var existing = paper.querySelector('.mumtaz-total-dlc');
+
+    /* Do not show Total DLC on unrelated tests/reports. */
+    if(!rows.length){
+      if(existing) existing.remove();
+      return;
+    }
+
+    if(!existing){
+      existing = document.createElement('div');
+      existing.className = 'mumtaz-total-dlc';
+      existing.innerHTML =
+        '<label>Total DLC:</label>' +
+        '<input class="mumtaz-total-dlc-value" type="text" readonly aria-label="Total DLC">';
+
+      /* Put it immediately after the table containing the last DLC row. */
+      var lastRow = rows[rows.length - 1];
+      var table = lastRow.closest('table');
+      if(table && table.parentNode){
+        table.parentNode.insertBefore(existing, table.nextSibling);
+      }else{
+        paper.appendChild(existing);
+      }
+    }
+
+    rows.forEach(function(row){
+      var input = row.querySelector('input, select, textarea');
+      if(input && !input.dataset.totalDlcBound){
+        input.dataset.totalDlcBound = '1';
+        input.addEventListener('input', function(){
+          calculateTotal(existing);
+        });
+        input.addEventListener('change', function(){
+          calculateTotal(existing);
+        });
+      }
+    });
+
+    calculateTotal(existing);
+  }
+
+  /* Re-run after the application's existing openReport renders the modal. */
+  var oldOpenReport = window.openReport;
+  if(oldOpenReport && !window.__mumtazTotalDLCWrapped){
+    window.__mumtazTotalDLCWrapped = true;
+    window.openReport = function(){
+      var result = oldOpenReport.apply(this, arguments);
+      setTimeout(addOrUpdateTotalDLC, 60);
+      setTimeout(addOrUpdateTotalDLC, 250);
+      setTimeout(addOrUpdateTotalDLC, 600);
+      return result;
+    };
+  }
+
+  /* Also handle reports rendered by later code. */
+  document.addEventListener('input', function(e){
+    if(e.target && e.target.closest && e.target.closest('#reportContent .reportPaper')){
+      var box = document.querySelector('#reportContent .mumtaz-total-dlc');
+      if(box) calculateTotal(box);
+    }
+  });
+
+  document.addEventListener('change', function(e){
+    if(e.target && e.target.closest && e.target.closest('#reportContent .reportPaper')){
+      setTimeout(addOrUpdateTotalDLC, 20);
+    }
+  });
+
+  document.addEventListener('DOMContentLoaded', function(){
+    setTimeout(addOrUpdateTotalDLC, 300);
+  });
+})();
+</script>
+
+
+<script id="mumtazSupabaseOnlineAuthV815">
+/* Mumtaz Lab V8.15 - Supabase Auth + shared app data layer.
+   Uses only the Supabase publishable key in the browser. */
+(function(){
+  'use strict';
+  const SB_URL='https://ahliwknjteiveorkuaty.supabase.co';
+  const SB_KEY='sb_publishable_UKQ2NSmj5pPY-VKVrqUktg_Mr16ZfFZ';
+  const SESSION_KEY='mumtaz_supabase_session_v815';
+  let cloudTimer=null;
+  let onlineSession=null;
+  let onlineRole='staff';
+
+  function sbHeaders(token,extra){
+    const h={'apikey':SB_KEY,'Content-Type':'application/json'};
+    if(token) h.Authorization='Bearer '+token;
+    return Object.assign(h,extra||{});
+  }
+  async function sbFetch(path,opts){
+    opts=opts||{};
+    const r=await fetch(SB_URL+path,opts);
+    let body=null; try{body=await r.json();}catch(e){}
+    if(!r.ok){
+      const msg=(body&&(body.msg||body.message||body.error_description||body.error))||('HTTP '+r.status);
+      throw new Error(msg);
+    }
+    return body;
+  }
+  function setStatus(text,ok){
+    const e=document.getElementById('loginStatus');
+    if(!e)return;
+    e.innerHTML=(ok?'🟢 ':'🔴 ')+text+' <button id="topLogout" class="danger hidden" onclick="logout()">Logout</button>';
+    const b=document.getElementById('topLogout');
+    if(b && onlineSession)b.classList.remove('hidden');
+  }
+  function saveSession(){try{localStorage.setItem(SESSION_KEY,JSON.stringify(onlineSession));}catch(e){}}
+  function readSession(){try{return JSON.parse(localStorage.getItem(SESSION_KEY)||'null');}catch(e){return null;}}
+  function clearSession(){try{localStorage.removeItem(SESSION_KEY);}catch(e){}}
+
+  async function getRole(userId,token){
+    try{
+      const rows=await sbFetch('/rest/v1/user_roles?user_id=eq.'+encodeURIComponent(userId)+'&select=role',{headers:sbHeaders(token)});
+      if(rows&&rows[0]&&String(rows[0].role).toLowerCase()==='admin') return 'admin';
+      if(rows&&rows[0]) return 'staff';
+      // Fallback: ask the security-definer admin check for the current session.
+      try{
+        const a=await sbFetch('/rest/v1/rpc/is_admin',{method:'POST',headers:sbHeaders(token),body:'{}'});
+        if(a===true || (a&&a.is_admin===true)) return 'admin';
+      }catch(e2){ console.warn('Mumtaz Lab admin RPC lookup failed:',e2); }
+      return 'staff';
+    }catch(e){
+      console.warn('Mumtaz Lab role lookup failed:',e);
+      try{
+        const a=await sbFetch('/rest/v1/rpc/is_admin',{method:'POST',headers:sbHeaders(token),body:'{}'});
+        if(a===true || (a&&a.is_admin===true)) return 'admin';
+      }catch(e2){ console.warn('Mumtaz Lab admin fallback failed:',e2); }
+      return 'staff';
+    }
+  }
+
+  function cloudSnapshot(){
+    const copy=JSON.parse(JSON.stringify(db||{}));
+    delete copy.users; /* Never upload local passwords/users. */
+    return copy;
+  }
+  async function cloudLoad(token){
+    const rows=await sbFetch('/rest/v1/app_data?id=eq.1&select=id,data,updated_at',{headers:sbHeaders(token)});
+    return rows&&rows[0]?rows[0].data:null;
+  }
+  async function cloudSave(token){
+    if(!token || typeof db==='undefined')return;
+    const payload={id:1,data:cloudSnapshot(),updated_at:new Date().toISOString()};
+    await sbFetch('/rest/v1/app_data?on_conflict=id',{
+      method:'POST',headers:sbHeaders(token,{'Prefer':'resolution=merge-duplicates,return=minimal'}),body:JSON.stringify(payload)
+    });
+  }
+  function queueCloudSave(){
+    if(!onlineSession)return;
+    clearTimeout(cloudTimer);
+    cloudTimer=setTimeout(async function(){
+      try{await cloudSave(onlineSession.access_token);}
+      catch(e){console.warn('Mumtaz Lab cloud save failed:',e);}
+    },1200);
+  }
+
+  async function finishOnlineLogin(auth){
+    onlineSession=auth;
+    saveSession();
+    onlineRole=await getRole(auth.user.id,auth.access_token);
+    current={name:auth.user.email, email:auth.user.email, role:onlineRole==='admin'?'Admin':'Staff', permissions:onlineRole==='admin'?['all']:['receipt','reports','search'], user_id:auth.user.id};
+
+    let cloud=null;
+    try{cloud=await cloudLoad(auth.access_token);}catch(e){console.warn('Mumtaz Lab cloud data read failed:',e);}
+    if(cloud && typeof cloud==='object' && Object.keys(cloud).length){
+      const localUsers=db.users;
+      db=Object.assign({},db,cloud);
+      db.users=localUsers||{};
+      if(!Array.isArray(db.audit))db.audit=[];
+      if(!Array.isArray(db.activity))db.activity=[];
+      if(!db.settings)db.settings={};
+      if(!db.tests)db.tests=[];
+      saveLocalOnly();
+    }else if(onlineRole==='admin'){
+      try{await cloudSave(auth.access_token);}catch(e){console.warn('Mumtaz Lab initial cloud upload failed:',e);}
+    }
+
+    document.getElementById('loginError').textContent='';
+    document.getElementById('loginScreen').classList.add('hidden');
+    const am=document.getElementById('authModal');if(am)am.classList.add('hidden');
+    setStatus('Supabase Online: '+auth.user.email+' ('+(onlineRole==='admin'?'Admin':'Staff')+')',true);
+    try{init();go('dashboard');}catch(e){console.error(e);}
+  }
+
+  async function onlineLogin(){
+    const email=document.getElementById('loginUser').value.trim().toLowerCase();
+    const password=document.getElementById('loginPass').value;
+    const err=document.getElementById('loginError');
+    err.textContent='';
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){err.textContent='Please enter your Supabase account email.';return;}
+    if(!password){err.textContent='Please enter your password.';return;}
+    const btn=document.querySelector('#loginScreen button.primary');
+    if(btn){btn.disabled=true;btn.textContent='Connecting...';}
+    try{
+      const auth=await sbFetch('/auth/v1/token?grant_type=password',{method:'POST',headers:sbHeaders(),body:JSON.stringify({email:email,password:password})});
+      await finishOnlineLogin(auth);
+    }catch(e){err.textContent='Login failed: '+e.message;}
+    finally{if(btn){btn.disabled=false;btn.textContent='Login';}}
+  }
+
+  async function onlineSignup(){
+    const email=document.getElementById('authUser').value.trim().toLowerCase();
+    const pw=document.getElementById('authPass').value;
+    const confirm=document.getElementById('authConfirm').value;
+    const full=document.getElementById('authName').value.trim();
+    const msg=document.getElementById('authMsg');
+    msg.textContent='';
+    if(!/^\S+@\S+\.\S+$/.test(email)){msg.textContent='Please enter a valid email address.';return;}
+    if(pw.length<6){msg.textContent='Password must be at least 6 characters.';return;}
+    if(pw!==confirm){msg.textContent='Passwords do not match.';return;}
+    if(full.length<2){msg.textContent='Please enter your full name.';return;}
+    try{
+      const auth=await sbFetch('/auth/v1/signup',{method:'POST',headers:sbHeaders(),body:JSON.stringify({email:email,password:pw,data:{full_name:full,requested_role:'staff'}})});
+      if(auth&&auth.access_token){
+        await finishOnlineLogin(auth);
+      }else{
+        msg.innerHTML='<span class="success">Account created. Please check your email for confirmation, then login here.</span>';
+      }
+    }catch(e){msg.textContent='Sign up failed: '+e.message;}
+  }
+
+  async function onlineReset(){
+    const email=document.getElementById('authUser').value.trim().toLowerCase();
+    const msg=document.getElementById('authMsg');
+    msg.textContent='';
+    if(!/^\S+@\S+\.\S+$/.test(email)){msg.textContent='Enter the account email first.';return;}
+    try{
+      await sbFetch('/auth/v1/recover',{method:'POST',headers:sbHeaders(),body:JSON.stringify({email:email})});
+      msg.innerHTML='<span class="success">Password reset email sent. Check the email inbox.</span>';
+    }catch(e){msg.textContent='Reset failed: '+e.message;}
+  }
+
+  function saveLocalOnly(){
+    localStorage.setItem(DBKEY,JSON.stringify(db));
+  }
+  const originalSave=window.save;
+  if(originalSave && !window.__mumtazV815SaveWrapped){
+    window.__mumtazV815SaveWrapped=true;
+    window.save=function(){
+      const r=originalSave.apply(this,arguments);
+      queueCloudSave();
+      return r;
+    };
+  }
+
+  window.login=onlineLogin;
+  window.submitAuth=function(){if(window.authMode==='signup')onlineSignup();else onlineReset();};
+  window.showAuth=function(mode){
+    document.getElementById('authModal').classList.remove('hidden');
+    document.getElementById('authMsg').textContent='';
+    document.getElementById('authUser').value='';
+    document.getElementById('authPass').value='';
+    document.getElementById('authConfirm').value='';
+    document.getElementById('authName').value='';
+    const signup=mode==='signup';
+    document.getElementById('authTitle').textContent=signup?'Create Staff Account':'Reset Password';
+    document.getElementById('authHelp').textContent=signup?'Create your own online staff account. Admin access is assigned separately.':'Enter your account email to receive a password reset link.';
+    document.getElementById('authNameLabel').classList.toggle('hidden',!signup);
+    document.getElementById('authConfirmLabel').classList.toggle('hidden',!signup);
+    document.getElementById('authRoleLabel').classList.add('hidden');
+    document.querySelector('#authModal button.primary').textContent=signup?'Create Online Account':'Send Reset Email';
+    window.authMode=mode;
+    const label=document.querySelector('#authModal label:nth-of-type(2)');
+    if(label)label.firstChild.textContent='Email ';
+    const input=document.getElementById('authUser');if(input)input.type='email';
+  };
+  window.logout=async function(){
+    try{if(onlineSession)await sbFetch('/auth/v1/logout',{method:'POST',headers:sbHeaders(onlineSession.access_token)});}catch(e){}
+    clearSession();onlineSession=null;location.reload();
+  };
+
+  function forceOnlineUI(){
+    if(typeof db!=='undefined' && db.settings)db.settings.loginRequired=true;
+    const lu=document.getElementById('loginUser');
+    const loginLabel=lu&&lu.parentElement;
+    if(loginLabel){loginLabel.firstChild.textContent='Email ';}
+    if(lu){lu.type='email';lu.placeholder='your@email.com';}
+    const help=document.getElementById('authHelp');
+    if(help && window.authMode!=='reset')help.textContent='Create your own online staff account. Admin access is assigned separately.';
+    const role=document.getElementById('authRoleLabel');if(role)role.classList.add('hidden');
+    const roleSelect=document.getElementById('authRole');if(roleSelect)roleSelect.value='Reception';
+  }
+  document.addEventListener('DOMContentLoaded',function(){
+    forceOnlineUI();
+    setStatus('Supabase Online Login',true);
+    const saved=readSession();
+    if(saved&&saved.access_token&&saved.user){
+      finishOnlineLogin(saved).catch(function(){clearSession();setStatus('Supabase Online Login',true);});
+    }
+  });
+  window.addEventListener('beforeunload',function(){if(onlineSession)queueCloudSave();});
+})();
+</script>
+
+</body>
+</html>
