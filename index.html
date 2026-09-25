@@ -2305,12 +2305,47 @@ document.addEventListener('DOMContentLoaded',function(){setTimeout(function(){ad
     const rows=await sbFetch('/rest/v1/app_data?id=eq.1&select=id,data,updated_at',{headers:sbHeaders(token)});
     return rows&&rows[0]?rows[0].data:null;
   }
+
+  /* V8.16: merge local/offline work with the shared cloud copy.
+     Local records win when the same record was edited on this device. */
+  function mergeArray(localArr, remoteArr, keyFn){
+    const out=[]; const seen=new Set();
+    (Array.isArray(remoteArr)?remoteArr:[]).forEach(function(x){
+      const k=keyFn(x); if(k==null||k==='') return;
+      if(!seen.has(k)){seen.add(k);out.push(x);}
+    });
+    (Array.isArray(localArr)?localArr:[]).forEach(function(x){
+      const k=keyFn(x); if(k==null||k==='') return;
+      const i=out.findIndex(function(y){return keyFn(y)===k;});
+      if(i>=0) out[i]=x; else out.push(x);
+      seen.add(k);
+    });
+    return out;
+  }
+  function mergeCloudData(localData, remoteData){
+    const L=localData||{}, R=remoteData||{}, M=Object.assign({},R,L);
+    M.patients=mergeArray(L.patients,R.patients,x=>x&&String(x.sample||''));
+    M.reports=mergeArray(L.reports,R.reports,x=>x&&String(x.id||x.sample||''));
+    M.tests=mergeArray(L.tests,R.tests,x=>x&&String(x.name||'').toLowerCase());
+    M.expenses=mergeArray(L.expenses,R.expenses,x=>x&&[x.date,x.desc,x.amount,x.cat].join('|'));
+    M.inventory=mergeArray(L.inventory,R.inventory,x=>x&&[x.name,x.lot].join('|'));
+    M.audit=mergeArray(L.audit,R.audit,x=>x&&[x.time,x.user,x.action,x.record].join('|'));
+    M.activity=mergeArray(L.activity,R.activity,x=>x&&[x.time,x.user,x.action].join('|'));
+    M.settings=Object.assign({},R.settings||{},L.settings||{});
+    const rn=Number(R.settings&&R.settings.nextReportNo||1), ln=Number(L.settings&&L.settings.nextReportNo||1);
+    M.settings.nextReportNo=Math.max(rn,ln);
+    return M;
+  }
   async function cloudSave(token){
     if(!token || typeof db==='undefined')return;
-    const payload={id:1,data:cloudSnapshot(),updated_at:new Date().toISOString()};
+    const remote=await cloudLoad(token);
+    const merged=mergeCloudData(cloudSnapshot(),remote||{});
+    const payload={id:1,data:merged,updated_at:new Date().toISOString()};
     await sbFetch('/rest/v1/app_data?on_conflict=id',{
       method:'POST',headers:sbHeaders(token,{'Prefer':'resolution=merge-duplicates,return=minimal'}),body:JSON.stringify(payload)
     });
+    /* Keep the device current with any records that arrived from another staff PC. */
+    const users=db.users; db=Object.assign({},db,merged); db.users=users||{}; saveLocalOnly();
   }
   function queueCloudSave(){
     if(!onlineSession)return;
@@ -2331,7 +2366,8 @@ document.addEventListener('DOMContentLoaded',function(){setTimeout(function(){ad
     try{cloud=await cloudLoad(auth.access_token);}catch(e){console.warn('Mumtaz Lab cloud data read failed:',e);}
     if(cloud && typeof cloud==='object' && Object.keys(cloud).length){
       const localUsers=db.users;
-      db=Object.assign({},db,cloud);
+      const merged=mergeCloudData(cloudSnapshot(),cloud);
+      db=Object.assign({},db,merged);
       db.users=localUsers||{};
       if(!Array.isArray(db.audit))db.audit=[];
       if(!Array.isArray(db.activity))db.activity=[];
@@ -2459,5 +2495,114 @@ document.addEventListener('DOMContentLoaded',function(){setTimeout(function(){ad
 })();
 </script>
 
+<script id="mumtazV816OfflineSecuritySync">
+(function(){
+  'use strict';
+  /* V8.16: offline-first UX, reconnect sync, and staff/admin UI separation. */
+  const V816_SYNC_KEY='mumtaz_lab_v816_sync_state';
+  const V816_SESSION_KEY='mumtaz_supabase_session_v815';
+
+  function readSyncState(){try{return JSON.parse(localStorage.getItem(V816_SYNC_KEY)||'{}')}catch(e){return {}}}
+  function writeSyncState(x){try{localStorage.setItem(V816_SYNC_KEY,JSON.stringify(x||{}))}catch(e){}}
+  function cachedSession(){try{return JSON.parse(localStorage.getItem(V816_SESSION_KEY)||'null')}catch(e){return null}}
+  function online(){return navigator.onLine!==false}
+
+  function ensureBanner(){
+    let b=document.getElementById('v816SyncBanner');
+    if(b)return b;
+    b=document.createElement('div'); b.id='v816SyncBanner';
+    b.style.cssText='position:fixed;right:10px;bottom:10px;z-index:99999;padding:8px 12px;border-radius:8px;font:600 12px Arial;box-shadow:0 2px 10px rgba(0,0,0,.2);background:#fff;border:1px solid #bbb;';
+    document.body.appendChild(b); return b;
+  }
+  function status(text,good){
+    const b=ensureBanner();
+    b.textContent=text;
+    b.style.color=good?'#126b32':'#8a4b00';
+    b.style.borderColor=good?'#8bc49d':'#d8b06a';
+    b.style.background=good?'#f2fff5':'#fff9ec';
+  }
+  function setSyncPending(v){const st=readSyncState();st.pending=!!v;st.lastAttempt=Date.now();writeSyncState(st)}
+
+  /* Keep system-changing areas Admin-only, while staff can continue normal lab work. */
+  const oldGo=window.go;
+  window.go=function(id){
+    if(typeof current==='undefined' || !current) return;
+    if((id==='settings'||id==='tests') && !(current.permissions||[]).includes('all')){
+      alert('Only Admin can change system settings, users, or test configuration.');
+      return;
+    }
+    if(oldGo) return oldGo.apply(this,arguments);
+  };
+
+  const oldSaveSettings=window.saveSettings;
+  window.saveSettings=function(){
+    if(typeof current==='undefined' || !current || !(current.permissions||[]).includes('all')){
+      alert('Only Admin can change Lab Settings / Users.'); return;
+    }
+    const r=oldSaveSettings?oldSaveSettings.apply(this,arguments):undefined;
+    const st=readSyncState();st.pendingSettings=true;writeSyncState(st);setSyncPending(true);
+    return r;
+  };
+
+  function hideStaffDeleteButtons(){
+    if(typeof current==='undefined' || !current || (current.permissions||[]).includes('all'))return;
+    document.querySelectorAll('.danger').forEach(function(btn){
+      const t=(btn.textContent||'').trim().toLowerCase();
+      if(t==='delete' || t.includes('delete')) btn.style.display='none';
+    });
+  }
+  const oldRefresh=window.refresh;
+  window.refresh=function(){const r=oldRefresh?oldRefresh.apply(this,arguments):undefined;setTimeout(hideStaffDeleteButtons,20);return r;};
+
+  /* Track local work even while there is no Internet. Existing app.save() still stores data in localStorage. */
+  const oldSave=window.save;
+  if(oldSave && !window.__v816SaveWrapped){
+    window.__v816SaveWrapped=true;
+    window.save=function(){
+      const r=oldSave.apply(this,arguments);
+      setSyncPending(true);
+      if(!online()) status('🔴 Offline — saved on this PC',false);
+      else status('🟢 Online — syncing…',true);
+      return r;
+    };
+  }
+
+  async function syncNow(){
+    const s=cachedSession();
+    if(!s || !s.access_token){
+      if(!online()) status('🔴 Offline — local mode',false);
+      return;
+    }
+    if(!online()){status('🔴 Offline — local mode (will sync when Internet returns)',false);return;}
+    try{
+      /* Reuse the app's authenticated cloud functions when available. */
+      if(typeof window.mumtazCloudSync==='function') await window.mumtazCloudSync();
+      const st=readSyncState();st.pending=false;st.pendingSettings=false;st.lastSync=new Date().toISOString();writeSyncState(st);
+      status('🟢 Online — data synced',true);
+    }catch(e){
+      setSyncPending(true);
+      status('🟠 Online — sync pending',false);
+      console.warn('V8.16 sync:',e);
+    }
+  }
+  window.mumtazSyncNow=syncNow;
+
+  window.addEventListener('offline',function(){status('🔴 Internet off — continue working offline',false)});
+  window.addEventListener('online',function(){status('🟡 Internet back — syncing…',true);setTimeout(syncNow,500)});
+
+  document.addEventListener('DOMContentLoaded',function(){
+    setTimeout(function(){
+      if(!online()) status('🔴 Offline — local mode',false);
+      else if(cachedSession()) syncNow();
+      else status('🟢 Online — login required',true);
+      hideStaffDeleteButtons();
+    },700);
+  });
+})();
+</script>
+
+<style id="mumtazV816Styles">
+@media(max-width:700px){#v816SyncBanner{font-size:11px!important;right:6px!important;bottom:6px!important;max-width:85vw}}
+</style>
 </body>
 </html>
